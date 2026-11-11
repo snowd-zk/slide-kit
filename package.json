@@ -1,0 +1,15 @@
+{
+  "name": "codex-slide-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Korean 16:9 HTML slide deck kit: build (self-contained HTML) + render (PNG/PDF) + layout gate",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "python3 scripts/build.py",
+    "render": "node scripts/render.js",
+    "test:template": "python3 scripts/build.py --src template/deck-template.html --out template/out/deck-template.html && node scripts/render.js template/out/deck-template.html template/out/png --pdf template/out/deck-template.pdf"
+  },
+  "dependencies": {
+    "puppeteer": "^25.12.0"
+  }
+}

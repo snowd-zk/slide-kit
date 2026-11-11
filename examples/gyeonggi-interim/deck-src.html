@@ -1,0 +1,1225 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>경기도 스테이블코인 도입 방안 연구 · 1차 중간보고</title>
+<style>
+/*FONTS-BEGIN*/
+@font-face{font-family:'DeckG';src:url('../../fonts/GmarketSansTTFBold.ttf') format('truetype');font-weight:700;font-display:block;}
+@font-face{font-family:'DeckG';src:url('../../fonts/GmarketSansTTFMedium.ttf') format('truetype');font-weight:500;font-display:block;}
+@font-face{font-family:'DeckP';src:url('../../fonts/Pretendard-Regular.otf') format('opentype');font-weight:400;font-display:block;}
+@font-face{font-family:'DeckP';src:url('../../fonts/Pretendard-Medium.otf') format('opentype');font-weight:500;font-display:block;}
+@font-face{font-family:'DeckP';src:url('../../fonts/Pretendard-SemiBold.otf') format('opentype');font-weight:600;font-display:block;}
+@font-face{font-family:'DeckP';src:url('../../fonts/Pretendard-Bold.otf') format('opentype');font-weight:700;font-display:block;}
+/*FONTS-END*/
+:root{
+  --ink:#171222;--pri:#4B1C87;--navy:#2D0057;--proof:#00939A;--act:#663B93;--slate:#5A5470;
+  --soft:#F3EDFB;--line:#E3DFEC;--muted:#8A8499;--ok:#1E9E5A;--bad:#D23F3F;--proofsoft:#E6F5F5;
+  --G:'DeckG','DeckP';--P:'DeckP';
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#4a4458}
+body{font-family:var(--P);color:var(--ink);-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+.deck{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 0}
+.slide{width:1440px;height:810px;position:relative;overflow:hidden;background:#fff;display:flex;flex-direction:column;padding:0 56px 22px;flex:none}
+@media print{
+  @page{size:1440px 810px;margin:0}
+  html,body{background:#fff}
+  .deck{display:block;padding:0}
+  .slide{page-break-after:always;break-after:page}
+}
+/* ---------- chrome ---------- */
+.top{height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.sec{display:flex;align-items:center;gap:12px;font:500 15px/1 var(--G);color:var(--pri);letter-spacing:.2px}
+.sec .pt{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:6px;background:var(--pri);color:#fff;font-weight:700;font-size:13px;padding-top:2px}
+.sec .ttl{font:500 15px/1 var(--P);color:var(--slate)}
+.sec .bar{width:1px;height:14px;background:var(--line)}
+.meta{display:flex;align-items:center;gap:16px}
+.meta img{height:17px;display:block}
+.pn{font:700 15px/1 var(--G);color:var(--ink);letter-spacing:.5px;padding-top:2px}
+.pn span{color:var(--muted);font-weight:500}
+.hl{flex:none;margin:20px 0 18px;font:700 34px/1.34 var(--G);color:var(--ink);letter-spacing:-.8px;text-wrap:balance}
+.hl em{font-style:normal;color:var(--pri)}
+.hl em.z{color:var(--proof)}
+.bd{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.tk{flex:none;margin-top:16px;height:66px;background:var(--navy);border-radius:12px;display:flex;align-items:center;gap:20px;padding:0 28px;color:#fff}
+.tk .lb{flex:none;font:700 15px/1 var(--G);padding:7px 12px 5px;border:1.5px solid rgba(255,255,255,.55);border-radius:6px;letter-spacing:.3px}
+.tk p{font:600 21px/1.35 var(--P);letter-spacing:-.2px}
+/* ---------- primitives ---------- */
+.row{display:flex;gap:18px}
+.col{display:flex;flex-direction:column;gap:14px}
+.f1{flex:1;min-width:0}
+.ar.f1,.va.f1{flex:1}
+.grow{flex:1;min-height:0;display:flex;flex-direction:column}
+.grow>table{flex:1;height:100%}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.card.s{background:var(--soft);border-color:#E2D6F3}
+.card.hi{border:3px solid var(--pri);background:var(--soft)}
+.card.z{border:2px solid var(--proof)}
+.h3{font:700 21px/1.3 var(--G);color:var(--ink);letter-spacing:-.3px}
+.h4{font:700 19px/1.3 var(--G);color:var(--pri);letter-spacing:-.2px}
+.kick{font:700 14px/1 var(--G);color:var(--pri);letter-spacing:.6px}
+.t22{font-size:22px;line-height:1.45}
+.t20{font-size:20px;line-height:1.45}
+.t19{font-size:19px;line-height:1.45}
+.t18{font-size:18px;line-height:1.45}
+.sl{color:var(--slate)}
+b,.b{font-weight:700}
+.em{color:var(--pri);font-weight:700}
+.emz{color:var(--proof);font-weight:700}
+ul.ls{list-style:none;display:flex;flex-direction:column;gap:6px}
+ul.ls li{position:relative;padding-left:16px}
+ul.ls li::before{content:'';position:absolute;left:2px;top:.66em;width:6px;height:6px;border-radius:50%;background:var(--pri)}
+ul.ls.z li::before{background:var(--proof)}
+.num{flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--pri);color:#fff;font:700 17px/1 var(--G);padding-top:2px}
+.num.z{background:var(--proof)}
+.num.sm{width:28px;height:28px;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:6px;height:30px;padding:2px 12px 0;border-radius:15px;font:700 14px/1 var(--G);background:var(--pri);color:#fff;white-space:nowrap}
+.pill.z{background:var(--proof)}
+.pill.o{background:#fff;color:var(--pri);border:1.5px solid var(--pri)}
+.pill.g{background:var(--line);color:var(--slate)}
+.chip{display:flex;align-items:center;gap:10px;border-radius:10px;padding:9px 14px;background:#fff;border:1px solid var(--line);font-size:18px;line-height:1.35}
+.chip .k{flex:none;font:700 15px/1 var(--G);color:var(--slate);padding-top:2px}
+.ic{width:32px;height:32px;flex:none;stroke-width:1.5;display:block}
+.ic.s24{width:24px;height:24px;stroke-width:2}
+.ic.s28{width:28px;height:28px;stroke-width:1.72}
+.ic.s40{width:40px;height:40px;stroke-width:1.2}
+.ic.s48{width:48px;height:48px;stroke-width:1}
+.icb{flex:none;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:12px;background:var(--soft);color:var(--pri)}
+.icb.z{background:var(--proofsoft);color:var(--proof)}
+.icb.w{background:#fff}
+/* ---------- labeled arrows ---------- */
+.ar{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:var(--pri);padding:0 4px}
+.ar>span{font:700 15px/1.2 var(--P);text-align:center;white-space:nowrap}
+.ar>i{display:block;position:relative;width:100%;height:2.5px;background:currentColor;border-radius:2px}
+.ar>i::after{content:'';position:absolute;right:-3px;top:50%;transform:translateY(-50%);border-left:12px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.ar.l>i::after{right:auto;left:-3px;border-left:0;border-right:12px solid currentColor}
+.ar.bi>i::before{content:'';position:absolute;left:-3px;top:50%;transform:translateY(-50%);border-right:12px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.ar.dash>i{background:repeating-linear-gradient(90deg,currentColor 0 7px,transparent 7px 12px)}
+.va{flex:none;display:flex;align-items:center;justify-content:center;gap:12px;color:var(--pri)}
+.va>i{display:block;position:relative;width:2.5px;height:100%;background:currentColor;border-radius:2px}
+.va>i::after{content:'';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);border-top:12px solid currentColor;border-left:7px solid transparent;border-right:7px solid transparent}
+.va.bi>i::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);border-bottom:12px solid currentColor;border-left:7px solid transparent;border-right:7px solid transparent}
+.va>span{font:700 15px/1.2 var(--P);white-space:nowrap;background:#fff;padding:3px 8px;border-radius:6px;border:1px solid currentColor}
+.va.ctr{position:relative;width:2.5px;margin:0 auto;gap:0}
+.va.ctr>i{width:2.5px}
+.va.ctr>span{position:absolute;left:18px;top:50%;transform:translateY(-50%)}
+.c-m{color:var(--pri)} .c-d{color:var(--slate)} .c-z{color:var(--proof)} .c-a{color:var(--act)} .c-r{color:var(--bad)} .c-g{color:var(--ok)}
+.legend{display:flex;gap:18px;align-items:center;font:500 15px/1 var(--P);color:var(--slate)}
+.legend i{display:inline-block;width:22px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle;background:currentColor}
+.legend span{display:inline-flex;align-items:center}
+/* ---------- table ---------- */
+table.tb{width:100%;border-collapse:separate;border-spacing:0;font-size:18px;line-height:1.38}
+.tb th{font:700 16px/1.3 var(--G);color:#fff;background:var(--navy);padding:13px 14px 11px;text-align:left}
+.tb th:first-child{border-top-left-radius:10px}
+.tb th:last-child{border-top-right-radius:10px}
+.tb td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tb td.c,.tb th.c{text-align:center}
+.tb tr td:first-child{font-weight:700;color:var(--ink)}
+/* ---------- cover ---------- */
+.cover{padding:0;background:linear-gradient(180deg,#FFFFFF 0%,#FBF9FE 55%,#F1E9FC 100%)}
+.cover .img{position:absolute;right:-30px;top:165px;width:900px;height:auto;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 24%,#000 100%),linear-gradient(180deg,transparent 0%,#000 14%,#000 84%,transparent 100%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent 0%,#000 24%,#000 100%),linear-gradient(180deg,transparent 0%,#000 14%,#000 84%,transparent 100%);mask-composite:intersect}
+.cover .txt{position:absolute;left:80px;top:0;bottom:0;width:680px;display:flex;flex-direction:column;justify-content:center;gap:0}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="i-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5h18M4 9.5l8-6 8 6"/><path d="M5.5 9.5v8M10 9.5v8M14 9.5v8M18.5 9.5v8M3 20.5h18"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7.5V5.5A1.5 1.5 0 0 0 17.5 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h13.5a1.5 1.5 0 0 0 1.5-1.5V16"/><path d="M21 9.5h-5a2.5 2.5 0 0 0 0 5h5z"/><path d="M3 7.5h16"/></symbol>
+<symbol id="i-gov" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.2"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M10.5 21v-2.5h3V21"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+<symbol id="i-contract" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M10.5 12l-2 2.5 2 2.5M13.5 12l2 2.5-2 2.5"/></symbol>
+<symbol id="i-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 8.5l1.8 7 2.2-5.5 2.2 5.5 1.8-7M7.5 11.5h9"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v5.5c0 4.4-3.1 7.8-7.5 9.5-4.4-1.7-7.5-5.1-7.5-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.3-4.4"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-checkc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.5v2"/></symbol>
+<symbol id="i-eyeoff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 6.1A9.8 9.8 0 0 1 12 6c5 0 8.5 4 9.5 6-.4.9-1.3 2.2-2.6 3.4M6.6 7.6C4.6 8.9 3.2 10.7 2.5 12c1 2 4.5 6 9.5 6 1.7 0 3.2-.5 4.5-1.2"/><path d="M9.9 10a3 3 0 0 0 4.1 4.1"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M7 16v-4M12 16V8M17 16V5"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c1.8.9 3 2.9 3 5.7"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c0-4 3.4-7 7.5-7s7.5 3 7.5 7"/></symbol>
+<symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l2-5h14l2 5"/><path d="M3 9h18v1a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7M10 20v-4h4v4"/></symbol>
+<symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></symbol>
+<symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4.5"/><path d="M11.2 11.8L20 3M16 7l2.5 2.5M13.8 9.2l2 2"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5L2.5 20h19z"/><path d="M12 10v4.5M12 17.3v.2"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7M14 8.5v7"/></symbol>
+<symbol id="i-ban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.7 5.7l12.6 12.6"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2.5L4.5 14H11l-1 7.5L18.5 10H12z"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v17M7.5 20.5h9M5 7h14"/><path d="M5 7l-2.8 6a2.8 2.8 0 0 0 5.6 0zM19 7l-2.8 6a2.8 2.8 0 0 0 5.6 0z"/></symbol>
+<symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l9 4.8-9 4.8-9-4.8z"/><path d="M3 12.5l9 4.8 9-4.8M3 16.5l9 4.8 9-4.8"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V3.5M5 4h12l-2.5 4.5L17 13H5"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+<symbol id="i-pointer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5l12 7-5.2 1.4-2.6 5.6z"/><path d="M12.8 11.9l5 6"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h16v11.5H9.5L4 20.5z"/><path d="M8 9h8M8 12.5h5"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l7 7 4-4 7 7"/><path d="M15 16h6v-6"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-5L16 4l4 4L9 19z"/><path d="M13.5 6.5l4 4"/></symbol>
+<symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="16" height="6.5" rx="1.5"/><path d="M8 7.2h.01M8 16.8h.01"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3z"/></symbol>
+<symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></symbol>
+<symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></symbol>
+<symbol id="i-q" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17v.2"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-team" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7.5" r="3"/><circle cx="5" cy="10" r="2.3"/><circle cx="19" cy="10" r="2.3"/><path d="M7 20c0-2.8 2.2-5 5-5s5 2.2 5 5M1.8 18.5c.3-2 1.6-3.4 3.2-3.4M22.2 18.5c-.3-2-1.6-3.4-3.2-3.4"/></symbol>
+</defs>
+</svg>
+<div class="deck">
+<!--SLIDES-->
+<style>
+/* S01 */
+.cv-logo{position:absolute;left:80px;top:56px;height:26px}
+.cv-org{font:500 24px/1.3 var(--P);color:var(--slate);margin-bottom:22px;display:flex;align-items:center;gap:12px}
+.cv-org::before{content:'';width:36px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--pri),var(--proof))}
+.cv-t{font:700 52px/1.24 var(--G);color:var(--ink);letter-spacing:-1.4px;margin-bottom:22px}
+.cv-s{font:500 28px/1.42 var(--G);color:var(--pri);letter-spacing:-.6px;margin-bottom:40px}
+.cv-line{width:560px;height:1px;background:var(--line);margin-bottom:22px}
+.cv-p{font:500 20px/1.4 var(--P);color:var(--muted);margin-bottom:12px}
+.cv-c{font:700 24px/1.3 var(--G);color:var(--navy)}
+.cover .grad{position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--navy),var(--pri) 45%,var(--proof))}
+</style>
+<section class="slide cover" id="s01" data-name="표지">
+  <img class="img" data-bleed src="assets/cover.jpg" alt="">
+  <img class="cv-logo" src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO">
+  <div class="txt">
+    <div class="cv-org">경기도 지역금융과</div>
+    <h1 class="cv-t">경기도 스테이블코인<br>도입 방안 연구</h1>
+    <div class="cv-s">1차 중간 연구성과 보고 및<br>2차 기술실증(PoC) 시연 시나리오 확정안</div>
+    <div class="cv-line"></div>
+    <div class="cv-p">계약기간: 2026.07.01 ~ 2027.02.25 | 보고일자: 2026년 10월</div>
+    <div class="cv-c">(주)지크립토 컨소시엄</div>
+  </div>
+  <div class="grad"></div>
+</section>
+
+<style>
+/* S02 */
+.ms{display:flex;align-items:stretch}
+.stp{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:18px 18px 16px;position:relative}
+.stp .tp{display:flex;align-items:center;justify-content:space-between;height:30px}
+.stp .no{font:700 26px/1 var(--G);color:var(--line)}
+.stp .nm{font:700 25px/1.25 var(--G);color:var(--ink);letter-spacing:-.4px}
+.stp .when{margin-top:auto;font:600 18px/1.3 var(--P);color:var(--slate);display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.stp.cur .when{color:var(--pri);border-color:#D6C6EC}
+.stp.nx .when{color:var(--proof)}
+.stp ul{margin-top:6px;gap:10px}
+.stp.cur{border:3px solid var(--pri);background:var(--soft);box-shadow:0 10px 28px rgba(75,28,135,.16)}
+.stp.cur .no{color:var(--pri)}
+.stp.nx{border:2px solid var(--proof)}
+.stp.nx .no{color:var(--proof)}
+.ms .ar{width:104px}
+</style>
+<section class="slide" id="s02" data-name="과업체계">
+  <div class="top"><div class="sec"><span class="pt">PART I</span>과업 개요 및 현황<span class="bar"></span><span class="ttl">공식 과업 체계 및 1차 중간보고의 위상</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">02 <span>/ 22</span></span></div></div>
+  <h2 class="hl">공식 과업 일정에 따라 <em>1차 중간성과를 보고</em>하고, <em>2차 PoC 시연 계획을 확정</em>합니다.</h2>
+  <div class="bd">
+    <div class="ms grow" style="flex-direction:row">
+      <div class="stp"><div class="tp"><span class="no">01</span></div><div class="nm">착수보고</div><ul class="ls t20"><li>과업수행계획 확정</li><li>연구 조직 구성 완료</li></ul><div class="when"><svg class="ic s24"><use href="#i-cal"/></svg>(계약 후 7일 이내)</div></div>
+      <div class="ar c-d"><span>과업수행계획</span><i></i></div>
+      <div class="stp cur"><div class="tp"><span class="no">02</span><span class="pill">현 단계</span></div><div class="nm">1차 중간보고</div><ul class="ls t20"><li><b>중간 연구성과 보고</b></li><li><b>2차 PoC 시연 시나리오 확정</b></li><li>발주기관 의견 수렴</li></ul><div class="when"><svg class="ic s24"><use href="#i-cal"/></svg>(착수 후 3개월 이내)</div></div>
+      <div class="ar c-m"><span>확정 시나리오</span><i></i></div>
+      <div class="stp nx"><div class="tp"><span class="no">03</span></div><div class="nm">2차 중간보고</div><ul class="ls z t20"><li><b>기술 실증(PoC) 라이브 시연</b></li><li>폐쇄형 테스트베드 결과 검증</li><li>조례·운영지침 초안 검토</li></ul><div class="when"><svg class="ic s24"><use href="#i-cal"/></svg>(착수 후 5개월 이내)</div></div>
+      <div class="ar c-d"><span>실증 결과</span><i></i></div>
+      <div class="stp"><div class="tp"><span class="no">04</span></div><div class="nm">최종보고</div><ul class="ls t20"><li>B/C 경제성 분석 종합</li><li>최종 조례·실행 로드맵 납품</li></ul><div class="when"><svg class="ic s24"><use href="#i-cal"/></svg>(완료 10일 이전)</div></div>
+    </div>
+    <div class="row">
+      <div class="card s f1" style="display:flex;gap:18px;align-items:flex-start"><div class="icb w"><svg class="ic"><use href="#i-doc"/></svg></div>
+        <div class="col" style="gap:10px"><div class="h3">1. 과업지시서 명시 규정</div>
+        <ul class="ls t20"><li>1차 보고는 연구 중간성과와 향후 계획을 보고합니다.</li><li>2차 보고는 기술적 실증(PoC) 결과를 단독 보고합니다.</li></ul></div></div>
+      <div class="card s f1" style="display:flex;gap:18px;align-items:flex-start"><div class="icb w"><svg class="ic"><use href="#i-target"/></svg></div>
+        <div class="col" style="gap:10px"><div class="h3">2. 금일 보고의 핵심 목표</div>
+        <ul class="ls t20"><li>착수 3개월간 축적한 법제·환경 분석 성과를 공유합니다.</li><li>조기 개발된 PoC 엔진(80%)을 시연할 <span class="em">경기도 맞춤형 시나리오 1순위를 확정</span>합니다.</li></ul></div></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>1차 보고는 이론 연구를 결산하고, 2차 보고의 실증 시연 대상을 결정하는 자리입니다.</p></div>
+</section>
+
+<style>
+/* S03 */
+.pg{display:flex;align-items:center;gap:10px}
+.pg .tr{flex:1;height:12px;border-radius:6px;background:var(--line);overflow:hidden}
+.pg .tr i{display:block;height:100%;border-radius:6px;background:var(--pri)}
+.pg .v{flex:none;width:58px;font:700 19px/1 var(--G);color:var(--pri);text-align:right;padding-top:2px}
+.pg.dev .tr i{background:repeating-linear-gradient(-45deg,var(--act) 0 8px,#8C68B5 8px 14px)}
+.pg.dev .v{width:auto;color:var(--act)}
+.pg.dev .v small,.pg.tot .v small{font:700 14px/1 var(--P);margin-left:2px}
+.pg.tot .tr i{background:var(--navy)}
+.pg.tot .v{width:auto;color:var(--navy)}
+.s03 .tb td{padding:10px 14px;font-size:19px}
+.s03 tr.dv td{background:#FAF7FD}
+.s03 tr.tt td{background:var(--soft);border-bottom:none;font-weight:700}
+.s03 tr.tt td:first-child{border-bottom-left-radius:10px}
+.s03 tr.tt td:last-child{border-bottom-right-radius:10px}
+.tag{display:inline-flex;align-items:center;height:22px;padding:1px 8px 0;border-radius:5px;font:700 12.5px/1 var(--G);margin-left:8px;vertical-align:2px}
+.tag.d{background:var(--act);color:#fff}
+.tag.r{background:var(--navy);color:#fff}
+.lg2{display:flex;gap:18px;justify-content:flex-end;font:500 15px/1 var(--P);color:var(--slate);margin-bottom:8px}
+.lg2 span{display:inline-flex;align-items:center;gap:7px}
+.lg2 i{width:26px;height:10px;border-radius:5px;display:inline-block}
+</style>
+<section class="slide s03" id="s03" data-name="진척현황">
+  <div class="top"><div class="sec"><span class="pt">PART I</span>과업 개요 및 현황<span class="bar"></span><span class="ttl">38개 과업 요구항목별 진척 현황 진단</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">03 <span>/ 22</span></span></div></div>
+  <h2 class="hl">기반 연구 공정률은 <em>45%를 달성</em>했으며, 기술 개발은 <em>계획 대비 선제 진척</em>되었습니다.</h2>
+  <div class="bd" style="gap:12px">
+    <div class="grow">
+      <div class="lg2"><span><i style="background:var(--pri)"></i>연구 준비도</span><span><i style="background:repeating-linear-gradient(-45deg,var(--act) 0 5px,#8C68B5 5px 9px)"></i>개발 완성도</span></div>
+      <table class="tb">
+        <colgroup><col style="width:268px"><col style="width:84px"><col style="width:250px"><col><col style="width:330px"></colgroup>
+        <tr><th>과업 묶음 (총 38개 요구)</th><th class="c">요구수</th><th>준비도</th><th>현재 기확보 범위 (v0.8)</th><th>잔여 과업 (하반기 집중)</th></tr>
+        <tr><td>① 정책 환경 및 법제 연구</td><td class="c">5개</td><td><div class="pg"><div class="tr"><i style="width:50%"></i></div><span class="v">50%</span></div></td><td>국내외 법제(MiCA 등), 발행·상환 주체별 책임 비교</td><td>조례 제·개정안 작성, 법률 자문</td></tr>
+        <tr><td>② 타당성 및 경제적 효과</td><td class="c">4개</td><td><div class="pg"><div class="tr"><i style="width:38%"></i></div><span class="v">38%</span></div></td><td>CBDC 연계 조건, 정성적 기대 편익 분석</td><td>경기도 실자료 기반 비용·편익(B/C) 분석</td></tr>
+        <tr><td>③ 실행전략 및 운영모델</td><td class="c">20개</td><td><div class="pg"><div class="tr"><i style="width:55%"></i></div><span class="v">55%</span></div></td><td>참여기관 역할, 위험 통제 매뉴얼, 단계적 로드맵</td><td>1순위 적용분야 선정, 지역화폐 연계 지침</td></tr>
+        <tr class="dv"><td>④ PoC 및 지갑 인프라</td><td class="c">9개</td><td><div class="pg dev"><div class="tr"><i style="width:80%"></i></div><span class="v">80%<small>(개발)</small></span></div></td><td>스마트계약, zkPoRL 회로, 관리자 콘솔 개발 완료</td><td>행정 데이터 연동 및 라이브 시연 시나리오</td></tr>
+        <tr class="tt"><td>전체 종합</td><td class="c">38개</td><td><div class="pg tot"><div class="tr"><i style="width:44.7%"></i></div><span class="v">44.7%<small>(연구)</small></span></div></td><td>이론·제도·아키텍처 설계 초안 완료</td><td>실자료 분석 및 2차 PoC 현장 실증</td></tr>
+      </table>
+    </div>
+    <div class="row">
+      <div class="card f1" style="display:flex;gap:16px;align-items:center;border-left:5px solid var(--act)"><div class="icb"><svg class="ic"><use href="#i-bolt"/></svg></div>
+        <p class="t20"><b>선제적 기술 성과</b>: PoC 인프라는 계획보다 앞서 <span class="em">핵심 기능 80%를 이미 구현</span>했습니다.</p></div>
+      <div class="card f1" style="display:flex;gap:16px;align-items:center;border-left:5px solid var(--pri)"><div class="icb"><svg class="ic"><use href="#i-target"/></svg></div>
+        <p class="t20"><b>후속 집중 과업</b>: 경기도 실자료(원장/수수료)를 반영한 정량 분석과 PoC 시연에 연구 역량을 집중합니다.</p></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>이론 분석은 정상 궤도에 올랐으며, 기술 개발은 계획보다 빠르게 80%를 달성했습니다.</p></div>
+</section>
+
+<style>
+/* S04 */
+.lane{display:flex;gap:18px;border:1px solid var(--line);border-radius:14px;padding:14px 18px;align-items:stretch}
+.lane .lt{flex:none;width:176px;display:flex;flex-direction:column;justify-content:center;gap:8px;border-right:1px solid var(--line);padding-right:16px}
+.lane .lt .k{font:700 13px/1 var(--G);letter-spacing:.5px}
+.lane .lt .n{font:700 19px/1.32 var(--G);letter-spacing:-.3px}
+.lane .lt .s{font:500 16px/1.3 var(--P);color:var(--slate)}
+.lane.old{background:#FAF9FC}
+.lane.old .lt .k{color:var(--muted)}
+.lane.new{background:var(--soft);border:2px solid var(--pri)}
+.lane.new .lt .k{color:var(--pri)}
+.lane .rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;justify-content:space-evenly}
+.flw{display:flex;align-items:center}
+.nd{flex:none;display:flex;align-items:center;justify-content:center;gap:8px;min-height:62px;padding:8px 12px;border-radius:10px;background:#fff;border:1.5px solid var(--line);font:600 18px/1.3 var(--P);text-align:center}
+.nd .ic{color:var(--pri)}
+.nd.p{border-color:var(--pri);color:var(--ink)}
+.nd.dk{background:var(--pri);color:#fff;border-color:var(--pri)}
+.nd.dk .ic{color:#fff}
+.nd.z{border:2px solid var(--proof);background:var(--proofsoft)}
+.nd.z .ic{color:var(--proof)}
+.chips{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:10px}
+.chip .k{width:62px}
+.lane.old .chip .k{color:var(--muted)}
+.lane.new .chip .k{color:var(--pri)}
+.bn{display:flex;gap:14px;align-items:flex-start}
+</style>
+<section class="slide" id="s04" data-name="지역화폐한계">
+  <div class="top"><div class="sec"><span class="pt">PART II</span>환경 분석 및 규제·법제 중간성과<span class="bar"></span><span class="ttl">경기지역화폐 6.4조 인프라의 현실적 한계</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">04 <span>/ 22</span></span></div></div>
+  <h2 class="hl">현행 카드형 지역화폐는 <em>수수료 부담, 정산 지연, 정책 목적 통제의 한계</em>를 가집니다.</h2>
+  <div class="bd" style="gap:12px">
+    <div class="lane old grow" style="flex-direction:row">
+      <div class="lt"><span class="k">AS-IS</span><span class="n">현행 카드형 정산망</span><span class="s">높은 비용과 지연</span></div>
+      <div class="rt">
+        <div class="flw">
+          <div class="nd" style="width:138px"><svg class="ic s28"><use href="#i-user"/></svg>소비자 결제</div>
+          <div class="ar c-d f1"><span>결제 정보</span><i></i></div>
+          <div class="nd" style="width:138px"><svg class="ic s28"><use href="#i-server"/></svg>VAN/PG사</div>
+          <div class="ar c-d f1"><span>승인 요청</span><i></i></div>
+          <div class="nd" style="width:138px"><svg class="ic s28"><use href="#i-card"/></svg>카드사 승인</div>
+          <div class="ar c-d f1"><span>승인 내역</span><i></i></div>
+          <div class="nd" style="width:150px"><svg class="ic s28"><use href="#i-doc"/></svg>운영대행사 대사</div>
+          <div class="ar c-d f1"><span>정산 대금</span><i></i></div>
+          <div class="nd" style="width:138px"><svg class="ic s28"><use href="#i-store"/></svg>가맹점 정산</div>
+        </div>
+        <div class="chips">
+          <div class="chip"><span class="k">소요 시간</span><span>결제 후 D+2일 ~ D+3일 소요</span></div>
+          <div class="chip"><span class="k">발생 비용</span><span>가맹점 결제 수수료 <span style="white-space:nowrap">(0.5% ~ 1.5%)</span> 발생</span></div>
+          <div class="chip"><span class="k">정책 한계</span><span>사후 환수 및 마일스톤 조건부 정산 불가</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="lane new grow" style="flex-direction:row">
+      <div class="lt"><span class="k">TO-BE</span><span class="n">스테이블코인 온체인 레일</span><span class="s">즉시 정산 및 프로그래머블 통제</span></div>
+      <div class="rt">
+        <div class="flw">
+          <div class="nd p" style="width:150px"><svg class="ic s28"><use href="#i-user"/></svg>소비자 결제</div>
+          <div class="ar c-m f1"><span>토큰 결제</span><i></i></div>
+          <div class="nd dk" style="width:330px"><svg class="ic s28"><use href="#i-contract"/></svg>스마트계약 (정책 조건 자동 검증)</div>
+          <div class="ar c-m f1"><span>즉시 정산</span><i></i></div>
+          <div class="nd p" style="width:250px"><svg class="ic s28"><use href="#i-store"/></svg>가맹점/기업 즉시 수취</div>
+        </div>
+        <div class="chips">
+          <div class="chip"><span class="k">소요 시간</span><span><b>실시간</b> (즉시 원자적 정산)</span></div>
+          <div class="chip"><span class="k">발생 비용</span><span><b>중계 수수료 0원화</b> (직접 정산)</span></div>
+          <div class="chip"><span class="k">정책 장점</span><span>사전 프로그래밍된 목적 외 사용 원천 차단</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="kick" style="margin-bottom:10px">3대 핵심 병목 요인</div>
+      <div class="row" style="gap:14px">
+        <div class="card f1 bn"><span class="num sm">1</span><p class="t18"><b>정산 주기 지연</b>: 소상공인이 결제 대금을 정산받기까지 최소 2영업일이 소요됩니다.</p></div>
+        <div class="card f1 bn"><span class="num sm">2</span><p class="t18"><b>중계 수수료 발생</b>: VAN사 및 카드사 결제망 의존으로 고정 운영 수수료가 발생합니다.</p></div>
+        <div class="card f1 bn"><span class="num sm">3</span><p class="t18"><b>조건부 통제 불가</b>: 특정 목적(마일스톤 달성, 사용처 세분화)에 따른 자동 정산이 불가능합니다.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>스테이블코인은 단순 결제수단이 아닌, 행정 정산 비용을 제거하는 새로운 결제 레일입니다.</p></div>
+</section>
+
+<style>
+/* S05 */
+.s05 .tb td{padding:12px 16px;font-size:19.5px}
+.s05 .tb td:first-child{white-space:nowrap}
+.s05 .tb td.hc{background:var(--soft);color:var(--pri);font-weight:700;border-left:3px solid var(--pri);border-right:3px solid var(--pri)}
+.s05 .tb tr:last-child td.hc{border-bottom:3px solid var(--pri)}
+.s05 .tb th.hc{background:var(--pri);border-left:3px solid var(--pri);border-right:3px solid var(--pri)}
+.s05 .rh{display:flex;align-items:center;gap:10px}
+.s05 .rh .ic{color:var(--pri)}
+</style>
+<section class="slide s05" id="s05" data-name="규제환경">
+  <div class="top"><div class="sec"><span class="pt">PART II</span>환경 분석 및 규제·법제 중간성과<span class="bar"></span><span class="ttl">글로벌 표준(MiCA) 및 국내 규제 환경 분석</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">05 <span>/ 22</span></span></div></div>
+  <h2 class="hl">글로벌 규제는 <em>준비금 100% 보전</em>을 요구하며, 국내는 <em>은행권 중심 발행</em>을 우선 검토합니다.</h2>
+  <div class="bd" style="gap:14px">
+    <div class="grow"><table class="tb">
+      <colgroup><col style="width:168px"><col style="width:350px"><col style="width:360px"><col></colgroup>
+      <tr><th>구분</th><th><span style="display:inline-flex;align-items:center;gap:8px"><svg class="ic s24"><use href="#i-globe"/></svg>EU MiCA 규제 기준</span></th><th>대한민국 가상자산 2단계 입법 방향</th><th class="hc">경기도 연구 적용 포인트</th></tr>
+      <tr><td><div class="rh"><svg class="ic s28"><use href="#i-bank"/></svg>발행 주체</div></td><td>인가받은 신용기관(은행) 또는 전자화폐기관(EMI)</td><td>은행권 중심 우선 인가 검토 (한국은행·금융위 기조)</td><td class="hc">준비금은행 연계 민관 협력형 모델 채택</td></tr>
+      <tr><td><div class="rh"><svg class="ic s28"><use href="#i-db"/></svg>준비자산</div></td><td>1:1 현금 및 초단기 국채 분리 보관 의무</td><td>예치금 분리 보관 및 도산 시 이용자 우선변제</td><td class="hc">준비자산 외부 신탁 및 도산격리 구조 설계</td></tr>
+      <tr><td><div class="rh"><svg class="ic s28"><use href="#i-swap"/></svg>상환 의무</div></td><td>액면가 상환 청구권 보장 (수수료 부과 제한)</td><td>법정화폐와 1:1 무조건 상환 보장</td><td class="hc">경기도-은행 간 1:1 환매 상환 체계 구축</td></tr>
+      <tr><td><div class="rh"><svg class="ic s28"><use href="#i-search"/></svg>투명성 검증</div></td><td>정기 외부 회계감사 및 감사보고서 공시</td><td>실시간 지급준비금 모니터링 시스템 요구</td><td class="hc"><span class="emz">zkPoRL</span> 기반 실시간 온체인 준비금 증명 도입</td></tr>
+    </table></div>
+    <div class="card s" style="display:flex;gap:20px;align-items:center;padding:20px 24px">
+      <div class="icb w"><svg class="ic"><use href="#i-scale"/></svg></div>
+      <div class="col" style="gap:8px"><div class="kick">핵심 시사점</div>
+        <ul class="ls t20"><li>국내외 규제는 모두 <span class="em">"준비자산의 완벽한 100% 보전"</span>과 <span class="em">"은행 수준의 컴플라이언스"</span>를 요구합니다.</li>
+        <li>따라서 경기도 단독 발행보다는 <span class="em">도 금고 및 시중은행이 준비금을 수탁하는 구조</span>가 제도적으로 안전합니다.</li></ul></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>규제를 준수하기 위해 준비금 은행이 결합된 신탁 기반 발행 모델을 채택합니다.</p></div>
+</section>
+
+<style>
+/* S06 */
+.mdl{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:12px;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;background:#fff}
+.mdl.rec{border:3px solid var(--pri);background:var(--soft);box-shadow:0 10px 28px rgba(75,28,135,.15)}
+.mdl .hd{display:flex;align-items:center;justify-content:space-between}
+.mdl .nm{font:700 22px/1.3 var(--G);letter-spacing:-.4px;margin-top:6px}
+.mdl .fl{display:flex;flex-direction:column;align-items:stretch}
+.mdl .fl .nd{min-height:54px;justify-content:flex-start;padding:8px 14px}
+.mdl .fl .va{height:54px}
+.res{border-radius:10px;padding:12px 14px;background:#F7F6FA;border:1px solid var(--line)}
+.res .k{font:700 15px/1 var(--G);color:var(--slate);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mdl.rec .res{background:#fff;border-color:#D9C9EE}
+.mdl.rec .res .k{color:var(--pri)}
+.vd{border-top:1px dashed #CFC6DE;padding-top:12px;display:flex;gap:10px;align-items:flex-start}
+.vd .ic{margin-top:2px}
+.vd .k{font:700 14px/1 var(--G);color:var(--muted);margin-bottom:6px}
+</style>
+<section class="slide" id="s06" data-name="발행모델비교">
+  <div class="top"><div class="sec"><span class="pt">PART II</span>환경 분석 및 규제·법제 중간성과<span class="bar"></span><span class="ttl">지자체 발행 모델 비교 및 리스크 분석</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">06 <span>/ 22</span></span></div></div>
+  <h2 class="hl">지자체 직접 발행은 법적 리스크가 높으며, <em>준비금은행 협력 모델이 가장 현실적</em>입니다.</h2>
+  <div class="bd">
+    <div class="row" style="flex:1;gap:16px">
+      <div class="mdl">
+        <div><div class="hd"><span class="pill g">모델 A</span></div><div class="nm">지자체 직접 발행형</div></div>
+        <div class="fl">
+          <div class="nd"><svg class="ic s28"><use href="#i-gov"/></svg>경기도 직접 발행</div>
+          <div class="va c-d"><i></i><span>자체 발행·운영</span></div>
+          <div class="nd"><svg class="ic s28"><use href="#i-server"/></svg>자체 인프라 구축</div>
+        </div>
+        <div class="res"><div class="k"><svg class="ic s24"><use href="#i-alert"/></svg>리스크</div><p class="t18">전자금융거래법 허가 불가<br>지방자치법상 통화발행 권한 부재</p></div>
+        <div class="vd"><svg class="ic s28 c-d"><use href="#i-x"/></svg><div><div class="k">권고 판정</div><p class="t18">법 개정 전까지 실행 불가능 (비현실적).</p></div></div>
+      </div>
+      <div class="mdl rec">
+        <div><div class="hd"><span class="pill">모델 B</span><span class="pill o"><svg class="ic s24" style="width:18px;height:18px"><use href="#i-check"/></svg>추천</span></div><div class="nm">민관 협력 준비금은행형</div></div>
+        <div class="fl">
+          <div class="nd p"><svg class="ic s28"><use href="#i-gov"/></svg>경기도 (정책 설계/감독)</div>
+          <div class="va bi c-m"><i></i><span>준비금 관리 위탁</span></div>
+          <div class="nd p"><svg class="ic s28"><use href="#i-bank"/></svg>준비금 은행 (수탁/상환)</div>
+        </div>
+        <div class="res"><div class="k"><svg class="ic s24"><use href="#i-shield"/></svg>장점</div><p class="t18">제도권 규제 100% 준수<br>도산 격리 및 이용자 예금 보호</p></div>
+        <div class="vd"><svg class="ic s28 c-m"><use href="#i-checkc"/></svg><div><div class="k">권고 판정</div><p class="t18"><span class="em">최우선 추진 권고</span>. 현행 법령 안에서 시금고 은행과 즉시 추진 가능.</p></div></div>
+      </div>
+      <div class="mdl">
+        <div><div class="hd"><span class="pill g">모델 C</span></div><div class="nm">기존 지역화폐 점진 대체형</div></div>
+        <div class="fl">
+          <div class="nd"><svg class="ic s28"><use href="#i-users"/></svg>기존 대행사 유지</div>
+          <div class="va c-d"><i></i><span>정산 백엔드 전환</span></div>
+          <div class="nd"><svg class="ic s28"><use href="#i-cube"/></svg>백엔드 정산만 블록체인화</div>
+        </div>
+        <div class="res"><div class="k"><svg class="ic s24"><use href="#i-layers"/></svg>장점 · 단점</div><p class="t18"><b>장점</b>: 이용자 혼선 최소화<br><b>단점</b>: 비용 절감 효과 제한적</p></div>
+        <div class="vd"><svg class="ic s28 c-d"><use href="#i-swap"/></svg><div><div class="k">권고 판정</div><p class="t18">과도기적 대안으로 병행 검토.</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>경기도는 감독과 정책을 맡고, 준비금 관리는 은행에 위탁하는 모델이 최적입니다.</p></div>
+</section>
+
+<style>
+/* S07 */
+.def{border-radius:16px;background:var(--soft);border:2px solid var(--pri);padding:20px 28px;text-align:center}
+.def .k{font:700 16px/1 var(--G);color:var(--pri);letter-spacing:.4px;margin-bottom:12px}
+.def q{display:block;font:700 27px/1.4 var(--G);color:var(--ink);letter-spacing:-.6px;quotes:'“' '”'}
+.tree{height:34px;position:relative}
+.tree::before{content:'';position:absolute;left:16.66%;right:16.66%;top:16px;border-top:2px solid #CDBDE6}
+.tree i{position:absolute;width:2px;background:#CDBDE6}
+.val{flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;align-items:flex-start;border:1.5px solid var(--line);border-radius:14px;padding:20px 22px;background:#fff}
+.val .h3{margin-bottom:14px;font-size:30px}
+.val .t20{font-size:25px;line-height:1.5}
+.val .icb{width:76px;height:76px}
+.val.z{border:2px solid var(--proof);background:var(--proofsoft)}
+.val.z .h3{color:var(--proof)}
+.logic{display:flex;gap:14px}
+.logic>div{flex:1;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:12px;background:#F8F7FA;border:1px solid var(--line)}
+</style>
+<section class="slide" id="s07" data-name="중간결론">
+  <div class="top"><div class="sec"><span class="pt">PART II</span>환경 분석 및 규제·법제 중간성과<span class="bar"></span><span class="ttl">중간 결론: '가상자산'이 아닌 '정책정산 운영체제'로의 전환</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">07 <span>/ 22</span></span></div></div>
+  <h2 class="hl">경기도 스테이블코인은 투기 자산이 아니며, <em>프로그래머블 행정 정산 레일</em>입니다.</h2>
+  <div class="bd" style="gap:0">
+    <div class="grow">
+      <div class="def"><div class="k">경기도 스테이블코인의 본질적 정의</div><q>스마트계약으로 정책 조건을 부여하고, 중간 수수료 없이 즉시 정산하는 공공 결제 인프라</q></div>
+      <div class="tree"><i style="left:50%;top:0;height:16px"></i><i style="left:16.66%;top:16px;height:18px"></i><i style="left:50%;top:16px;height:18px"></i><i style="left:83.33%;top:16px;height:18px"></i></div>
+      <div class="row f1" style="gap:16px">
+        <div class="val"><div class="icb"><svg class="ic"><use href="#i-target"/></svg></div><div><div class="h3">1. 조건부 지급</div><p class="t20">특정 목적(ESG, 청년, 소상공인)에만 작동</p></div></div>
+        <div class="val"><div class="icb"><svg class="ic"><use href="#i-bolt"/></svg></div><div><div class="h3">2. 실시간 정산</div><p class="t20">결제 즉시 수수료 없이 가맹점 계좌에 자동 입금</p></div></div>
+        <div class="val z"><div class="icb z w"><svg class="ic"><use href="#i-shield"/></svg></div><div><div class="h3">3. 투명성 검증</div><p class="t20">영지식증명(ZKP)으로 준비금 100% 보전을 입증</p></div></div>
+      </div>
+    </div>
+    <div class="col" style="gap:10px;padding-top:20px">
+      <div class="kick">발주기관 설명 핵심 논리</div>
+      <div class="logic">
+        <div><span class="num sm">1</span><p class="t19">코인을 시장에 상장하거나 도민에게 투자를 권유하는 사업이 아닙니다.</p></div>
+        <div><span class="num sm">2</span><p class="t19">예산이 목적에 맞게 집행되었을 때만 자동으로 지급되는 <span class="em">행정 자동화 소프트웨어</span>입니다.</p></div>
+        <div><span class="num sm">3</span><p class="t19">기존 카드 결제망에 지불하던 수억 원대의 수수료와 정산 지연을 제거합니다.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>코인 발행 자체가 목적이 아니며, 복잡한 보조금 정산 행정을 자동화하는 도구입니다.</p></div>
+</section>
+
+<style>
+/* S08 */
+.arch{display:grid;grid-template-columns:1fr 400px;column-gap:22px}
+.lyr{border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;justify-content:space-evenly;gap:10px;border:1.5px solid var(--line);background:#fff}
+.lyr .hd{display:flex;align-items:center;gap:12px}
+.lyr .hd .n{font:700 20px/1.2 var(--G);letter-spacing:-.3px}
+.lyr .hd .e{font:500 15px/1.2 var(--P);color:var(--slate)}
+.mods{display:flex;gap:10px;align-items:center}
+.mod{flex:1;display:flex;align-items:center;gap:10px;min-height:62px;padding:10px 12px;border-radius:10px;background:#fff;border:1px solid var(--line);font:600 17.5px/1.3 var(--P)}
+.mod .ic{color:var(--pri)}
+.lyr.l3{background:#FBFAFD}
+.lyr.l2{background:var(--soft);border:2px solid var(--pri)}
+.lyr.l1{background:var(--proofsoft);border:2px solid var(--proof)}
+.lyr.l1 .mod .ic{color:var(--proof)}
+.cn{height:52px;display:flex;justify-content:center}
+.ldesc{display:flex;align-items:center;gap:14px;padding:0 4px 0 18px;border-left:3px solid var(--line)}
+.ldesc .k{font:700 18px/1.3 var(--G);color:var(--pri);margin-bottom:6px}
+</style>
+<section class="slide" id="s08" data-name="시스템아키텍처">
+  <div class="top"><div class="sec"><span class="pt">PART III</span>기술 아키텍처 및 선제적 PoC 개발 현황<span class="bar"></span><span class="ttl">경기도형 스테이블코인 목표 시스템 아키텍처</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">08 <span>/ 22</span></span></div></div>
+  <h2 class="hl">시스템은 <em>준비금 계층, 스마트계약 정산 계층, 행정 서비스 계층</em>의 3단 구조로 설계합니다.</h2>
+  <div class="bd">
+    <div class="arch grow" style="display:grid;grid-template-rows:1fr auto 1fr auto 1fr">
+      <div class="lyr l3"><div class="hd"><span class="pill g">Layer 3</span><span class="n">행정 서비스 계층</span><span class="e">(User &amp; Admin Interface)</span></div>
+        <div class="mods"><div class="mod"><svg class="ic s28"><use href="#i-monitor"/></svg>경기도정 모니터링 포털</div><div class="mod"><svg class="ic s28"><use href="#i-store"/></svg>참여기업/가맹점 정산 콘솔</div><div class="mod"><svg class="ic s28"><use href="#i-phone"/></svg>도민/수혜자 간편 지갑</div></div></div>
+      <div class="ldesc"><div><div class="k">행정 계층</div><p class="t19">복잡한 블록체인 지식 없이 일반 웹 브라우저와 모바일 앱으로 접속합니다.</p></div></div>
+      <div class="cn"><div class="va bi c-a"><i></i><span>API / SDK 연동</span></div></div><div></div>
+      <div class="lyr l2"><div class="hd"><span class="pill">Layer 2</span><span class="n">스마트계약 정산 계층</span><span class="e">(Programmable Settlement Core)</span></div>
+        <div class="mods"><div class="mod"><svg class="ic s28"><use href="#i-coin"/></svg>목적제한 토큰 발행/소각</div><div class="mod"><svg class="ic s28"><use href="#i-pen"/></svg>다중서명 마일스톤 정산 로직</div><div class="mod"><svg class="ic s28"><use href="#i-pause"/></svg>부정사용 긴급 동결 제어</div></div></div>
+      <div class="ldesc" style="border-color:var(--pri)"><div><div class="k">정산 계층</div><p class="t19">사전에 설정된 정책 규칙에 따라 자금을 조건부로 자동 이전합니다.</p></div></div>
+      <div class="cn"><div class="va bi c-z"><i></i><span>온체인 검증 트랜잭션</span></div></div><div></div>
+      <div class="lyr l1"><div class="hd"><span class="pill z">Layer 1</span><span class="n">신뢰 및 준비금 계층</span><span class="e">(Trust &amp; Reserve Verification)</span></div>
+        <div class="mods"><div class="mod"><svg class="ic s28"><use href="#i-bank"/></svg>준비금 수탁은행 (100% 현금 보전)</div><div class="ar bi c-z" style="width:118px"><span>잔액 대조 검증</span><i></i></div><div class="mod" style="border-color:var(--proof)"><svg class="ic s28"><use href="#i-key"/></svg><div style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.3"><span style="white-space:nowrap">zkPoRL 영지식 회로</span><span style="white-space:nowrap;font-size:0.85em;color:var(--slate)">(실시간 지급준비 증명)</span></div></div></div></div>
+      <div class="ldesc" style="border-color:var(--proof)"><div><div class="k" style="color:var(--proof)">신뢰 계층</div><p class="t19">영지식 증명을 통해 은행 잔액과 코인 발행량의 일치 여부를 실시간 검증합니다.</p></div></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>사용자 편의성은 웹 수준으로 유지하고, 정산과 검증은 블록체인으로 자동화합니다.</p></div>
+</section>
+
+<style>
+/* S09 */
+.ln2{border:1px solid var(--line);border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:12px}
+.ln2 .tt{display:flex;align-items:center;gap:10px;font:700 18px/1.2 var(--G)}
+.ln2.old{background:#FAF9FC}
+.ln2.old .tt{color:var(--slate)}
+.ln2.zk{background:#fff;border:2px solid var(--proof)}
+.ln2.zk .tt{color:var(--proof)}
+.mg{display:grid;grid-template-columns:200px 130px 1fr 104px 1.15fr;align-items:center}
+.mg .ins{display:flex;flex-direction:column;gap:30px}
+.mg svg.mrg{width:150px;height:150px;display:block;overflow:visible}
+.mlab{position:absolute;font:700 15px/1.2 var(--P);white-space:nowrap;background:#fff;padding:0 4px}
+.okb{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 3px;border-radius:6px;background:var(--proof);color:#fff;font:700 14px/1 var(--G)}
+.rig{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:12px;border:1px solid var(--line);background:#fff}
+</style>
+<section class="slide" id="s09" data-name="zkPoRL원리">
+  <div class="top"><div class="sec"><span class="pt">PART III</span>기술 아키텍처 및 선제적 PoC 개발 현황<span class="bar"></span><span class="ttl">zkPoRL(영지식 준비금 증명) 핵심 기술 작동 원리</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">09 <span>/ 22</span></span></div></div>
+  <h2 class="hl">민감한 계좌 정보를 노출하지 않고, <em class="z">준비금 100% 보전을 온체인에서 수학적으로 증명</em>합니다.</h2>
+  <div class="bd">
+    <div class="row grow" style="flex-direction:row;gap:18px">
+      <div class="col" style="width:930px;flex:none;gap:14px">
+        <div class="ln2 old">
+          <div class="tt"><svg class="ic s24"><use href="#i-doc"/></svg>기존 방식: 분기별 사후 서면감사</div>
+          <div class="flw">
+            <div class="nd" style="width:230px"><svg class="ic s28"><use href="#i-bank"/></svg>은행 잔고 증명서 발급</div>
+            <div class="ar c-d f1"><span>잔고 증명서</span><i></i></div>
+            <div class="nd" style="width:230px"><svg class="ic s28"><use href="#i-search"/></svg>회계법인 서면 감사</div>
+            <div class="ar c-d f1"><span>감사 결과</span><i></i></div>
+            <div class="nd" style="width:250px"><svg class="ic s28"><use href="#i-cal"/></svg>3개월 뒤 감사보고서 공시</div>
+          </div>
+          <div class="chip"><span class="k" style="color:var(--muted)">한계</span><span>감사 시점 사이의 자금 유출 탐지 불가, 도민 실시간 확인 불가능</span></div>
+        </div>
+        <div class="ln2 zk grow">
+          <div class="tt"><svg class="ic s24"><use href="#i-key"/></svg>zkPoRL 방식: 수학적 실시간 온체인 증명</div>
+          <div class="mg grow" style="display:grid">
+            <div class="ins">
+              <div class="nd" style="width:200px;flex-direction:column;gap:2px"><span style="display:flex;gap:8px;align-items:center"><svg class="ic s28"><use href="#i-eyeoff"/></svg>은행 잔액 데이터</span><span class="sl" style="font-size:16px">(비공개)</span></div>
+              <div class="nd" style="width:200px"><svg class="ic s28"><use href="#i-coin"/></svg>온체인 토큰 유통량</div>
+            </div>
+            <div style="position:relative;width:130px;height:150px">
+              <svg class="mrg" viewBox="0 0 130 150" style="width:130px"><defs><marker id="ahz" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00939A"/></marker></defs>
+                <path d="M0 33 H34 Q52 33 60 55 L68 75 H126" fill="none" stroke="#00939A" stroke-width="2.5" marker-end="url(#ahz)"/>
+                <path d="M0 117 H34 Q52 117 60 95 L68 75" fill="none" stroke="#00939A" stroke-width="2.5"/></svg>
+              <span class="mlab c-z" style="left:2px;top:6px">비공개 입력</span>
+              <span class="mlab c-z" style="left:2px;top:126px">유통량 입력</span>
+            </div>
+            <div class="nd z" style="flex-direction:column;gap:4px;min-height:96px"><span style="display:flex;gap:8px;align-items:center;white-space:nowrap"><svg class="ic s28"><use href="#i-key"/></svg>zk-SNARKs 증명 생성</span><span class="sl" style="font-size:16px">(수학적 암호화 증명)</span></div>
+            <div class="ar c-z" style="width:120px"><span>증명 제출</span><i></i></div>
+            <div class="nd z" style="flex-direction:column;gap:6px;min-height:96px"><span style="display:flex;gap:8px;align-items:center"><svg class="ic s28"><use href="#i-contract"/></svg>블록체인 스마트계약 자동 검증</span><span class="sl" style="font-size:16px;white-space:nowrap">(100% 일치 시 녹색 Verified)</span></div>
+          </div>
+          <div class="chip" style="border-color:var(--proof);background:var(--proofsoft)"><span class="k" style="color:var(--proof)">혁신</span><span>민감 금융정보 보호 + 1초 단위 실시간 지급준비 검증 + 감사 비용 절감</span></div>
+        </div>
+      </div>
+      <div class="col f1" style="gap:12px">
+        <div class="kick" style="color:var(--proof)">기술적 엄밀성</div>
+        <div class="rig f1"><div class="icb z"><svg class="ic"><use href="#i-eyeoff"/></svg></div><p class="t19"><b>프라이버시 보호</b>: 계좌번호, 도 금고 잔액 세부 내역은 외부에 절대 노출되지 않습니다.</p></div>
+        <div class="rig f1"><div class="icb z"><svg class="ic"><use href="#i-key"/></svg></div><p class="t19"><b>수학적 신뢰</b>: '준비금 잔액 ≥ 토큰 유통량' 명제가 참(True)이라는 사실만 영지식 증명으로 제출됩니다.</p></div>
+        <div class="rig f1"><div class="icb z"><svg class="ic"><use href="#i-shield"/></svg></div><p class="t19"><b>디지털 런 원천 차단</b>: 준비금 부족 사태 발생 시 시스템이 즉시 감지하여 추가 발행을 차단합니다.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>영지식 증명을 통해 예산 정보 유출 없이 완벽한 재정 투명성을 확보합니다.</p></div>
+</section>
+
+<style>
+/* S10 */
+.gauge{width:330px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--soft);border:2px solid var(--pri);border-radius:16px;padding:18px}
+.gauge .ring{position:relative;width:236px;height:236px}
+.gauge .ring svg{width:236px;height:236px;transform:rotate(-90deg)}
+.gauge .ring .v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .ring .v b{font:700 48px/1 var(--G);color:var(--pri);letter-spacing:-2px}
+.gauge .ring .v span{font:600 16px/1.2 var(--P);color:var(--slate);margin-top:6px}
+.gauge .cap{font:700 19px/1.35 var(--G);text-align:center}
+.lst{flex:1;display:flex;flex-direction:column;gap:10px;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px}
+.lst .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.lst .it{flex:1;max-height:78px;display:flex;align-items:center;gap:12px;font:500 19.5px/1.35 var(--P);padding:7px 0;border-bottom:1px dashed var(--line)}
+.lst .it:last-child{border-bottom:0}
+.lst .it .ic{color:var(--pri)}
+.lst.rem{background:#FAF9FC}
+.lst.rem .it .ic{color:var(--muted)}
+.met{flex:1;display:flex;gap:14px;align-items:flex-start;border-radius:14px;padding:16px 18px;border:1px solid var(--line);background:#fff}
+</style>
+<section class="slide" id="s10" data-name="PoC80퍼센트">
+  <div class="top"><div class="sec"><span class="pt">PART III</span>기술 아키텍처 및 선제적 PoC 개발 현황<span class="bar"></span><span class="ttl">[핵심 성과] 개발팀 PoC 기능 80% 조기 구축 완료 보고</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">10 <span>/ 22</span></span></div></div>
+  <h2 class="hl">2차 보고 예정 과업인 PoC 핵심 기술 기능을 <em>80% 선제 구현 완료</em>했습니다.</h2>
+  <div class="bd" style="gap:14px">
+    <div class="row grow" style="flex-direction:row;gap:16px">
+      <div class="gauge">
+        <div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#E3DFEC" stroke-width="10"/><circle cx="50" cy="50" r="42" fill="none" stroke="#4B1C87" stroke-width="10" stroke-linecap="round" stroke-dasharray="211.1 263.9"/></svg>
+          <div class="v"><b>80%</b><span>(선제 완료)</span></div></div>
+        <div class="cap">PoC 핵심 엔진 완성도</div>
+      </div>
+      <div class="lst" style="flex:1.25">
+        <div class="hd"><span class="h3">기구현 완료 기능 (80%)</span><span class="pill">완료</span></div>
+        <div class="it"><svg class="ic s28"><use href="#i-checkc"/></svg>ERC-20 기반 정책 스테이블코인 스마트계약</div>
+        <div class="it"><svg class="ic s28"><use href="#i-checkc"/></svg>발행(Mint), 소각(Burn), 일시정지(Pause) 로직</div>
+        <div class="it"><svg class="ic s28"><use href="#i-checkc"/></svg>마일스톤 단계별 다중서명 자동 정산 모듈</div>
+        <div class="it"><svg class="ic s28" style="color:var(--proof)"><use href="#i-checkc"/></svg>zk-SNARKs 기반 지급준비금 정합성 검증 회로</div>
+        <div class="it"><svg class="ic s28"><use href="#i-checkc"/></svg>독립 테스트넷 환경 구축 및 트랜잭션 검증</div>
+      </div>
+      <div class="lst rem">
+        <div class="hd"><span class="h3">잔여 과업 (20%)</span><span class="pill g">진행 예정</span></div>
+        <div class="it"><svg class="ic s28"><use href="#i-clock"/></svg>경기도 행정 업무 매핑 (시나리오 확정)</div>
+        <div class="it"><svg class="ic s28"><use href="#i-clock"/></svg>시연용 가상 표본 데이터 바인딩</div>
+        <div class="it"><svg class="ic s28"><use href="#i-clock"/></svg>2차 보고회 시연용 프론트엔드 UI 튜닝</div>
+      </div>
+    </div>
+    <div>
+      <div class="kick" style="margin-bottom:10px">개발 성과 세부 지표</div>
+      <div class="row" style="gap:14px">
+        <div class="met"><span class="num sm">1</span><p class="t18"><b>스마트계약 보안 검증</b>: 발행·회수·동결에 관한 권한 분립 스마트계약 테스트 완료.</p></div>
+        <div class="met" style="border-color:var(--proof)"><span class="num sm z">2</span><p class="t18"><b>영지식 회로 성능</b>: 증명 생성 시간 <span class="emz">1.2초</span>, 온체인 검증 가스비 최적화 완료.</p></div>
+        <div class="met"><span class="num sm">3</span><p class="t18"><b>선제적 추진 의미</b>: 일정 지연 리스크를 사전에 제거하여, 2차 보고회 라이브 시연 준비 완료.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>기술 엔진 개발은 이미 완료되었으며, 이제 경기도 행정 시나리오만 얹으면 됩니다.</p></div>
+</section>
+
+<style>
+/* S11 */
+.bx{flex:1;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.bx .it{flex:1;font-size:21px !important;display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;background:#fff;border:1px solid var(--line);font:600 19px/1.3 var(--P)}
+.bx.tech{background:var(--soft);border:2px solid var(--pri)}
+.bx.tech .it .ic{color:var(--pri)}
+.bx.adm{background:#fff;border:2px solid var(--navy)}
+.bx.adm .it{background:#F8F7FA}
+.bx.adm .it .ic{color:var(--navy)}
+.big{display:flex;flex-direction:column;align-items:center;justify-content:center;width:170px;flex:none;gap:8px;color:var(--pri)}
+.big span{font:700 17px/1.2 var(--G);background:var(--pri);color:#fff;padding:7px 12px 5px;border-radius:8px}
+.big i{display:block;position:relative;width:100%;height:10px;background:currentColor;border-radius:3px}
+.big i::after{content:'';position:absolute;right:-8px;top:50%;transform:translateY(-50%);border-left:22px solid currentColor;border-top:16px solid transparent;border-bottom:16px solid transparent}
+.live{display:flex;align-items:center;gap:16px;justify-content:center;border-radius:14px;padding:16px 20px;background:var(--navy);color:#fff;font:700 22px/1.3 var(--G)}
+.live .ic{color:#fff}
+.adv{width:410px;flex:none;display:flex;flex-direction:column;gap:12px;border-radius:16px;padding:20px 22px;background:#FAF9FC;border:1px solid var(--line)}
+.adv{justify-content:space-between}
+.adv .it{flex:1;display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);padding-top:10px}
+</style>
+<section class="slide" id="s11" data-name="행정실증전환">
+  <div class="top"><div class="sec"><span class="pt">PART III</span>기술 아키텍처 및 선제적 PoC 개발 현황<span class="bar"></span><span class="ttl">PoC 성공의 열쇠: 기능 구현에서 경기도 행정 실증으로 전환</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">11 <span>/ 22</span></span></div></div>
+  <h2 class="hl">기술 검증을 넘어 <em>경기도의 실제 행정 문제를 해결하는 시연 시나리오</em>가 필요합니다.</h2>
+  <div class="bd">
+    <div class="row grow" style="flex-direction:row;gap:20px">
+      <div class="col f1" style="gap:0">
+        <div class="row grow" style="flex-direction:row;gap:0;align-items:stretch">
+          <div class="bx tech"><div class="h3">완성된 기술 기능 (80%)</div>
+            <div class="it"><svg class="ic s28"><use href="#i-contract"/></svg>조건부 송금 컨트랙트</div>
+            <div class="it"><svg class="ic s28"><use href="#i-pen"/></svg>다중서명 승인 체계</div>
+            <div class="it"><svg class="ic s28" style="color:var(--proof)"><use href="#i-key"/></svg>zkPoRL 준비금 검증 회로</div></div>
+          <div class="big"><span>시나리오 결합</span><i></i></div>
+          <div class="bx adm"><div class="h3">경기도 실제 행정 과제</div>
+            <div class="it"><svg class="ic s28"><use href="#i-clock"/></svg>보조금 집행 및 정산 지연</div>
+            <div class="it"><svg class="ic s28"><use href="#i-ban"/></svg>지역화폐 부정유통 방지</div>
+            <div class="it"><svg class="ic s28"><use href="#i-search"/></svg>재정 투명성 검증 강화</div></div>
+        </div>
+        <div style="height:64px;display:flex"><div class="va ctr c-m"><i></i><span>결합 시나리오 현장 적용</span></div></div>
+        <div class="live"><svg class="ic s40"><use href="#i-monitor"/></svg>2차 중간보고 현장 라이브 시연: 도정 가치 입증</div>
+      </div>
+      <div class="adv">
+        <div class="kick">발주기관 제언</div>
+        <div class="it"><span class="num sm">1</span><p class="t19">개발실 안에서의 단순 송금 테스트는 공공기관 과업 평가에서 설득력이 떨어집니다.</p></div>
+        <div class="it"><span class="num sm">2</span><p class="t19"><span class="em">"경기도의 어떤 예산 사업에 적용하여 어떤 행정 비용을 줄였는가"</span>를 증명해야 합니다.</p></div>
+        <div class="it"><span class="num sm">3</span><p class="t19">따라서 2차 보고회에서 시연할 최적의 행정 시나리오를 선정해야 합니다.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>2차 중간보고의 성패는 도민과 공무원이 체감할 시연 시나리오의 현실성에 달려 있습니다.</p></div>
+</section>
+
+<style>
+/* S12 */
+.crit{display:grid;grid-template-columns:1fr 260px 1fr;grid-template-rows:1fr 1fr;gap:16px 0;position:relative}
+.cr{border:1.5px solid var(--line);border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:10px;background:#fff;position:relative;z-index:1}
+.cr .hd{display:flex;align-items:center;gap:12px}
+.cr .q{font:700 23px/1.42 var(--G);color:var(--ink);letter-spacing:-.4px}
+.cr .df{margin-top:auto;border-top:1px dashed #D6CCE6;padding-top:10px}
+.cr .df b{color:var(--pri)}
+.hub{grid-column:2;grid-row:1/3;align-self:center;justify-self:center;width:214px;height:214px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#6A35AE,var(--pri) 55%,var(--navy));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:2;box-shadow:0 0 0 10px var(--soft)}
+.hub b{font:700 19px/1.4 var(--G)}
+.hub .ic{color:#fff;margin-bottom:8px}
+.crit .cl{position:absolute;z-index:0;height:2px;background:#CDBDE6}
+</style>
+<section class="slide" id="s12" data-name="평가기준">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>2차 중간보고 대비 3대 PoC 시연 시나리오(안)<span class="bar"></span><span class="ttl">시연 시나리오 선정을 위한 4대 평가 기준</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">12 <span>/ 22</span></span></div></div>
+  <h2 class="hl"><em>행정 필요성, 구조 단순성, 시연 효과, 규제 안전성</em>을 기준으로 시나리오를 평가했습니다.</h2>
+  <div class="bd">
+    <div class="crit grow" style="display:grid">
+      <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:0" preserveAspectRatio="none"><g stroke="#CDBDE6" stroke-width="2" stroke-dasharray="6 6"><line x1="50%" y1="50%" x2="40%" y2="22%"/><line x1="50%" y1="50%" x2="60%" y2="22%"/><line x1="50%" y1="50%" x2="40%" y2="78%"/><line x1="50%" y1="50%" x2="60%" y2="78%"/></g></svg>
+      <div class="cr"><div class="hd"><div class="icb"><svg class="ic"><use href="#i-gov"/></svg></div><span class="h3">1. 행정적 필요성</span></div>
+        <div class="q">기존 방식의 정산 지연과 행정 공수가 큰 업무인가?</div>
+        <p class="t18 df"><b>기준 1 (행정성)</b>: 보조금 유용 방지 및 수기 정산 개선 효과가 뚜렷할 것.</p></div>
+      <div class="hub"><svg class="ic s40"><use href="#i-target"/></svg><b>2차 중간보고 PoC 시연 시나리오 선정 기준</b></div>
+      <div class="cr" style="grid-column:3"><div class="hd"><div class="icb"><svg class="ic"><use href="#i-team"/></svg></div><span class="h3">2. 이해관계자 단순성</span></div>
+        <div class="q">시군, 다수 주민 개입 없이 폐쇄형으로 안정적 통제가 가능한가?</div>
+        <p class="t18 df"><b>기준 2 (단순성)</b>: 3~4개 기관 내에서 완결되어 라이브 시연 중 오류 가능성이 낮을 것.</p></div>
+      <div class="cr" style="grid-column:1;grid-row:2"><div class="hd"><div class="icb"><svg class="ic"><use href="#i-monitor"/></svg></div><span class="h3">3. 라이브 시연 효과</span></div>
+        <div class="q">스마트계약의 자동 정산 과정을 화면으로 명확히 보여주는가?</div>
+        <p class="t18 df"><b>기준 3 (시연성)</b>: '승인 버튼 클릭 → 실시간 토큰 정산'이 직관적으로 보일 것.</p></div>
+      <div class="cr" style="grid-column:3;grid-row:2"><div class="hd"><div class="icb"><svg class="ic"><use href="#i-scale"/></svg></div><span class="h3">4. 규제 적합성</span></div>
+        <div class="q">현행 법령 하에서 즉시 적용 가능하며 법적 분쟁 리스크가 없는가?</div>
+        <p class="t18 df"><b>기준 4 (안전성)</b>: 금융위·한은 규제에 저촉되지 않는 B2B 목적 제한형일 것.</p></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>라이브 시연의 기술적 안정성과 행정적 명분을 모두 만족하는 과제를 엄선했습니다.</p></div>
+</section>
+
+<style>
+/* S13 sequence */
+.sq{position:relative;width:840px;flex:none;border:1px solid var(--line);border-radius:16px;background:#FCFBFE}
+.ll{position:absolute;top:16px;width:184px;height:64px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;background:#fff;border:1.5px solid var(--line);font:700 17px/1.25 var(--G);text-align:center;z-index:1}
+.ll .ic{color:var(--pri)}
+.ll.ch{background:var(--pri);color:#fff;border-color:var(--pri)}
+.ll.ch .ic{color:#fff}
+.lline{position:absolute;top:80px;bottom:52px;border-left:2px dashed #CFC6DE;transform:translateX(-1px)}
+.msg{position:absolute;height:46px;--c:var(--pri);color:var(--c)}
+.msg>i{position:absolute;left:0;right:0;bottom:8px;height:2.5px;background:currentColor}
+.msg.r>i::after{content:'';position:absolute;right:-2px;top:50%;transform:translateY(-50%);border-left:12px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.msg.l>i::after{content:'';position:absolute;left:-2px;top:50%;transform:translateY(-50%);border-right:12px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.msg.dash>i{background:repeating-linear-gradient(90deg,currentColor 0 7px,transparent 7px 12px)}
+.msg>span{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);white-space:nowrap;display:flex;align-items:center;gap:7px;font:600 16.5px/1.2 var(--P);color:var(--ink);background:#FCFBFE;padding:1px 6px}
+.msg>span b{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--c);color:#fff;font:700 13px/1 var(--G);padding-top:1px}
+.msg.m{--c:var(--pri)} .msg.a{--c:var(--act)} .msg.d{--c:var(--slate)}
+.msg.m>span{color:var(--pri);font-weight:700}
+.sq .legend{position:absolute;left:24px;bottom:16px}
+.ov{flex:1;display:flex;flex-direction:column;gap:12px;border-radius:16px;padding:20px 22px;background:var(--soft);border:2px solid var(--pri)}
+.ov .k{font:700 16px/1 var(--G);color:var(--pri);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.ov .blk{flex:1;display:flex;flex-direction:column;justify-content:center;background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #E2D6F3}
+</style>
+<section class="slide" id="s13" data-name="시나리오1-ESG보조금">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>2차 중간보고 대비 3대 PoC 시연 시나리오(안)<span class="bar"></span><span class="ttl">[시나리오 1: B2B 특화] 중소기업 ESG 컨설팅 보조금 정산 (최우선 추천)</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">13 <span>/ 22</span></span></div></div>
+  <h2 class="hl">중소기업 컨설팅 보조금을 <em>마일스톤에 따라 스마트계약으로 자동 정산</em>합니다.</h2>
+  <div class="bd">
+    <div class="row grow" style="flex-direction:row;gap:18px">
+      <div class="sq">
+        <div class="ll" style="left:110px"><svg class="ic s28"><use href="#i-gov"/></svg>경기도 / GBSA</div>
+        <div class="ll" style="left:316px"><svg class="ic s28"><use href="#i-users"/></svg>수혜 중소기업</div>
+        <div class="ll" style="left:522px"><svg class="ic s28"><use href="#i-doc"/></svg>ESG 컨설팅사</div>
+        <div class="ll ch" style="left:728px"><svg class="ic s28"><use href="#i-contract"/></svg>스마트계약<br>(온체인)</div>
+        <div class="lline" style="left:110px"></div><div class="lline" style="left:316px"></div><div class="lline" style="left:522px"></div><div class="lline" style="left:728px;border-left-color:#9E85C6"></div>
+        <div class="msg r m" style="left:110px;width:618px;top:96px"><span><b>1</b>보조금 토큰 예치 및 조건 설정 (2.5억 원 규모)</span><i></i></div>
+        <div class="msg l d dash" style="left:110px;width:412px;top:154px"><span><b>2</b>1차 착수보고서 제출</span><i></i></div>
+        <div class="msg r a" style="left:110px;width:618px;top:212px"><span><b>3</b>착수 승인 (다중서명 트랜잭션)</span><i></i></div>
+        <div class="msg l m" style="left:522px;width:206px;top:270px"><span><b>4</b>1차 마일스톤 대금 자동 입금 (30%)</span><i></i></div>
+        <div class="msg l d dash" style="left:110px;width:412px;top:328px"><span><b>5</b>최종 검수보고서 제출</span><i></i></div>
+        <div class="msg r a" style="left:110px;width:618px;top:386px"><span><b>6</b>최종 승인</span><i></i></div>
+        <div class="msg l m" style="left:522px;width:206px;top:444px"><span><b>7</b>잔여 대금 자동 입금 (70%)</span><i></i></div>
+        <div class="legend"><span class="c-m"><i></i>토큰·대금 이동</span><span class="c-a"><i></i>승인 트랜잭션</span><span class="c-d"><i style="background:repeating-linear-gradient(90deg,currentColor 0 5px,transparent 5px 9px)"></i>보고서 제출</span></div>
+      </div>
+      <div class="ov">
+        <div style="display:flex;justify-content:space-between;align-items:center"><span class="kick">사업 개요 및 실증 설계</span><span class="pill">최우선 추천</span></div>
+        <div class="blk"><div class="k"><svg class="ic s24"><use href="#i-flag"/></svg>대상 사업</div><p class="t18">경기도 중소기업 ESG 경영 활성화 (공개예산 20억 중 컨설팅 트랙 2.5억 기준).</p></div>
+        <div class="blk"><div class="k"><svg class="ic s24"><use href="#i-team"/></svg>참여 주체</div><p class="t18">경기도 ↔ GBSA(위탁기관) ↔ 수혜 중소기업(25개사) ↔ 컨설팅사.</p></div>
+        <div class="blk f1"><div class="k"><svg class="ic s24"><use href="#i-monitor"/></svg>시연 핵심 내용</div>
+          <div class="col" style="gap:8px"><div style="display:flex;gap:10px"><span class="num sm" style="width:24px;height:24px;font-size:13px">1</span><p class="t18">보조금 전용 토큰을 발행하여 컨설팅사 외 타 용도 유출을 원천 차단.</p></div>
+          <div style="display:flex;gap:10px"><span class="num sm" style="width:24px;height:24px;font-size:13px">2</span><p class="t18">도청 담당자가 승인하면 수기 계좌이체 없이 1초 만에 스마트계약 자동 입금.</p></div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>이해관계자가 단순하고 예산이 명확하여 2차 중간보고 메인 시연으로 가장 적합합니다.</p></div>
+</section>
+
+<style>
+/* S14 */
+.sr{display:grid;grid-template-columns:168px 200px 112px 176px 112px 200px 104px 1fr;align-items:center;border-radius:14px;padding:12px 16px;border:1px solid var(--line)}
+.sr .lb2{display:flex;flex-direction:column;gap:8px;padding-right:10px}
+.sr .lb2 .n{font:700 18px/1.3 var(--G)}
+.sr .lb2 .s{font:500 15px/1.3 var(--P);color:var(--slate)}
+.sr .ins{display:flex;flex-direction:column;gap:22px}
+.sr .ins .nd{min-height:52px;font-size:17px;padding:6px 10px}
+.sr.okr{background:#F5FBF7;border-color:#BFE3CD}
+.sr.bad{background:#FDF6F6;border-color:#EFC4C4}
+.st{display:flex;align-items:center;justify-content:center;gap:8px;min-height:62px;border-radius:10px;font:700 17.5px/1.3 var(--P);padding:8px 10px;text-align:center;color:#fff}
+.st.g{background:var(--ok)} .st.r{background:var(--bad)}
+.oc{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:62px;border-radius:10px;padding:8px 14px;font:700 17.5px/1.35 var(--P);border:1.5px solid}
+.oc.g{border-color:var(--ok);color:#16784A;background:#fff}
+.oc.r{border-color:var(--bad);color:#B02E2E;background:#fff}
+.alr{display:inline-flex;align-items:center;gap:6px;padding:5px 9px 4px;border-radius:6px;background:var(--bad);color:#fff;font:700 13.5px/1.1 var(--G);align-self:flex-start}
+.dm{flex:1;display:flex;gap:14px;align-items:flex-start;border-radius:14px;padding:16px 18px;border:1px solid var(--line);background:#fff}
+</style>
+<section class="slide" id="s14" data-name="시나리오2-zkPoRL">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>2차 중간보고 대비 3대 PoC 시연 시나리오(안)<span class="bar"></span><span class="ttl">[시나리오 2: 투명성 특화] zkPoRL 기반 실시간 지급준비금 증명</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">14 <span>/ 22</span></span></div></div>
+  <h2 class="hl">준비금 부족이나 비정상 출금 시도를 <em class="z">실시간 감지하여 자동 동결</em>하는 과정을 시연합니다.</h2>
+  <div class="bd" style="gap:12px">
+    <div class="col grow" style="gap:12px;justify-content:space-between">
+      <div class="sr okr f1">
+        <div class="lb2"><span class="n" style="color:#16784A">정상 상태 시연</span></div>
+        <div class="ins"><div class="nd"><svg class="ic s28"><use href="#i-bank"/></svg>은행 예치금 (100억)</div><div class="nd"><svg class="ic s28"><use href="#i-coin"/></svg>토큰 발행량 (100억)</div></div>
+        <div style="position:relative;width:112px;height:126px">
+          <svg viewBox="0 0 112 126" style="width:112px;height:126px;display:block;overflow:visible"><defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00939A"/></marker></defs>
+            <path d="M0 26 H30 Q46 26 52 44 L58 63 H108" fill="none" stroke="#00939A" stroke-width="2.5" marker-end="url(#ah2)"/><path d="M0 100 H30 Q46 100 52 82 L58 63" fill="none" stroke="#00939A" stroke-width="2.5"/></svg>
+          <span class="mlab c-z" style="left:4px;top:0;background:transparent">잔액 입력</span><span class="mlab c-z" style="left:4px;top:106px;background:transparent">발행량 입력</span>
+        </div>
+        <div class="nd z" style="min-height:62px"><svg class="ic s28"><use href="#i-key"/></svg>zkPoRL 증명 회로</div>
+        <div class="ar c-z"><span>증명 제출</span><i></i></div>
+        <div class="st g"><svg class="ic s28" style="color:#fff"><use href="#i-checkc"/></svg>온체인 검증: 정상</div>
+        <div class="ar c-g"><span>검증 결과</span><i></i></div>
+        <div class="oc g"><span style="display:flex;align-items:center;gap:8px"><svg class="ic s24"><use href="#i-coin"/></svg>토큰 유통 유지</span></div>
+      </div>
+      <div class="sr bad f1">
+        <div class="lb2"><span class="n" style="color:#B02E2E">이상 상태 시연</span><span class="s">(해킹/과다발행 모의 테스트)</span><span class="alr"><svg class="ic s24" style="width:16px;height:16px;stroke-width:3"><use href="#i-alert"/></svg>10억 불일치 발생!</span></div>
+        <div class="ins"><div class="nd" style="border-color:var(--bad)"><svg class="ic s28" style="color:var(--bad)"><use href="#i-bank"/></svg>은행 예치금 (90억)</div><div class="nd"><svg class="ic s28"><use href="#i-coin"/></svg>토큰 발행량 (100억)</div></div>
+        <div style="position:relative;width:112px;height:126px">
+          <svg viewBox="0 0 112 126" style="width:112px;height:126px;display:block;overflow:visible"><path d="M0 26 H30 Q46 26 52 44 L58 63 H108" fill="none" stroke="#00939A" stroke-width="2.5" marker-end="url(#ah2)"/><path d="M0 100 H30 Q46 100 52 82 L58 63" fill="none" stroke="#00939A" stroke-width="2.5"/></svg>
+          <span class="mlab c-z" style="left:4px;top:0;background:transparent">잔액 입력</span><span class="mlab c-z" style="left:4px;top:106px;background:transparent">발행량 입력</span>
+        </div>
+        <div class="nd z" style="min-height:62px"><svg class="ic s28"><use href="#i-key"/></svg>zkPoRL 증명 회로</div>
+        <div class="ar c-z"><span>증명 제출</span><i></i></div>
+        <div class="st r"><svg class="ic s28" style="color:#fff"><use href="#i-x"/></svg>온체인 검증: 실패</div>
+        <div class="ar c-r"><span>동결 트리거</span><i></i></div>
+        <div class="oc r"><span style="display:flex;align-items:center;gap:8px"><svg class="ic s24"><use href="#i-pause"/></svg>시스템 자동 긴급 동결</span><span style="font-weight:600;font-size:16.5px;padding-left:32px">추가 유통 즉시 차단</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="kick" style="margin-bottom:10px">시연 핵심 내용</div>
+      <div class="row" style="gap:14px">
+        <div class="dm"><span class="num sm z">1</span><p class="t18"><b>정상 시연</b>: 실시간 검증 버튼 클릭 시 1.2초 만에 온체인 'Verified' 상태 확인.</p></div>
+        <div class="dm" style="flex:1.45"><span class="num sm z">2</span><p class="t18"><b>장애 모의 시연</b>: 시연자가 임의로 가상 준비금을 삭감했을 때, 스마트계약이 불일치를 즉시 감지하고 발행을 긴급 차단(Pause)하는 통제 매뉴얼 시연.</p></div>
+        <div class="dm"><span class="num sm z">3</span><p class="t18"><b>도정 가치</b>: 지자체 가상자산 사업에서 우려되는 재정 사고 위험을 기술적으로 완벽히 통제함을 입증.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>재정 투명성을 수학적으로 입증하여 발주처의 정책적 불안을 완전히 해소합니다.</p></div>
+</section>
+
+<style>
+/* S15 */
+.wl{align-self:center;width:600px;border-radius:16px;padding:20px 24px;background:var(--soft);border:2px solid var(--pri);display:flex;gap:16px;align-items:center}
+.br{position:relative;height:110px;display:grid;grid-template-columns:.8fr 1.2fr}
+.br::before{content:'';position:absolute;left:21%;right:30.5%;top:18px;border-top:2.5px solid #9E85C6}
+.br::after{content:'';position:absolute;left:50%;top:0;height:18px;border-left:2.5px solid #9E85C6}
+.br>div{display:flex;padding-top:18px}
+.rs{flex:1;border-radius:14px;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.rs ul.ls{gap:14px}
+.rs ul.ls li{font-size:22px}
+.rs .hd{display:flex;align-items:center;gap:12px;font:700 25px/1.3 var(--G);padding-bottom:14px;border-bottom:1px solid var(--line)}
+.rs.blk{background:#F6F5F8;border:2px solid #B9B3C6}
+.rs.blk .hd{color:var(--slate)}
+.rs.ok{background:#fff;border:2px solid var(--pri)}
+.rs.ok .hd{color:var(--pri)}
+.rs ul.ls.g li::before{background:var(--muted)}
+.ft{width:440px;flex:none;display:flex;flex-direction:column;gap:12px}
+.ft .card{flex:1;display:flex;gap:14px;align-items:center}
+</style>
+<section class="slide" id="s15" data-name="시나리오3-청년기본소득">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>2차 중간보고 대비 3대 PoC 시연 시나리오(안)<span class="bar"></span><span class="ttl">[시나리오 3: 정책수당 특화] 청년기본소득 조건부 지급 및 가맹점 정산</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">15 <span>/ 22</span></span></div></div>
+  <h2 class="hl">청년기본소득의 <em>목적 외 사용을 원천 차단</em>하고, <em>영세 가맹점 수수료 0원 정산</em>을 시연합니다.</h2>
+  <div class="bd">
+    <div class="row grow" style="flex-direction:row;gap:20px">
+      <div class="col f1" style="gap:0">
+        <div class="wl"><div class="icb w" style="width:60px;height:60px"><svg class="ic s40"><use href="#i-phone"/></svg></div>
+          <div><div class="h3" style="margin-bottom:6px">청년 모바일 전자지갑</div><ul class="ls t18"><li>분기별 25만 원 수령</li><li>프로그래밍 규칙 내장 (유흥/사행업종 자동 필터링)</li></ul></div></div>
+        <div class="br"><div><div class="va ctr c-d"><i></i><span>유흥업종 결제 시도</span></div></div><div><div class="va ctr c-m"><i></i><span>전통시장 가맹점 결제</span></div></div></div>
+        <div class="row f1" style="gap:18px">
+          <div class="rs blk" style="flex:.8"><div class="hd"><svg class="ic s40"><use href="#i-ban"/></svg>스마트계약 차단</div><ul class="ls g t20"><li>에러 메시지 출력</li><li>부정유통 원천 차단</li></ul></div>
+          <div class="rs ok"><div class="hd"><svg class="ic s40"><use href="#i-checkc"/></svg>스마트계약 즉시 승인</div><ul class="ls t20"><li>가맹점 계좌에 수수료 0원으로 즉시 정산 입금</li><li>가맹점 D+2 대기시간 완전 해소</li></ul></div>
+        </div>
+      </div>
+      <div class="ft">
+        <div class="kick">사업 개요 및 특징</div>
+        <div class="card"><div class="icb"><svg class="ic"><use href="#i-flag"/></svg></div><p class="t19"><b>대상 사업</b>: 경기도 청년기본소득 (도민 대상 정책 지급금).</p></div>
+        <div class="card"><div class="icb"><svg class="ic"><use href="#i-users"/></svg></div><p class="t19"><b>시연 효과</b>: 도민 체감도가 가장 높고, '지역화폐 부정유통(상품권 깡)' 방지 효과를 직관적으로 전달.</p></div>
+        <div class="card" style="background:#FAF9FC"><div class="icb"><svg class="ic"><use href="#i-alert"/></svg></div><p class="t19"><b>고려 사항</b>: 모바일 지갑 앱 배포 및 다수 시군 가맹점 데이터 모킹 범위가 넓어 시연 준비 공수가 큼.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>대민 파급력은 가장 크나, 안정적 시연을 위해 후순위 파일럿으로 검토합니다.</p></div>
+</section>
+
+<style>
+/* S16 */
+.s16 .tb td{padding:10px 16px;font-size:18px;text-align:center}
+.s16 .tb td:first-child{text-align:left;white-space:nowrap}
+.s16 .tb th{text-align:center}
+.s16 .tb th:first-child{text-align:left}
+.s16 .tb td .v{display:block;font-weight:700;font-size:19px}
+.s16 .tb td .p{display:block;color:var(--slate);font-size:16.5px}
+.s16 .tb td.h1{background:var(--soft);border-left:3px solid var(--pri);border-right:3px solid var(--pri)}
+.s16 .tb td.h1 .v{color:var(--pri)}
+.s16 .tb th.h1{background:var(--pri);border-left:3px solid var(--pri);border-right:3px solid var(--pri)}
+.s16 .tb td.h2 .v{color:var(--proof)}
+.s16 .tb tr.fin td{border-top:2px solid var(--navy);border-bottom:0;padding:12px 16px}
+.s16 .tb tr.fin td.h1{border-bottom:3px solid var(--pri)}
+.s16 .tb tr.fin td:first-child{font:700 18px/1.3 var(--G);color:var(--navy)}
+.recm{display:flex;gap:18px;align-items:center;border-radius:14px;padding:16px 22px;background:var(--soft);border:2px solid var(--pri)}
+.recm .k{font:700 15px/1 var(--G);color:var(--pri);margin-bottom:8px}
+.recm .ic{color:var(--pri)}
+</style>
+<section class="slide s16" id="s16" data-name="시나리오비교">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>2차 중간보고 대비 3대 PoC 시연 시나리오(안)<span class="bar"></span><span class="ttl">3대 시나리오 정밀 비교 및 연구진 권고안</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">16 <span>/ 22</span></span></div></div>
+  <h2 class="hl"><em>B2B 보조금 정산을 메인 시연</em>으로 하고, <em class="z">zkPoRL 준비금 증명을 결합</em>할 것을 제안합니다.</h2>
+  <div class="bd" style="gap:12px">
+    <div class="grow"><table class="tb">
+      <colgroup><col style="width:230px"><col><col><col></colgroup>
+      <tr><th>평가 지표</th><th class="h1">[시나리오 1] B2B 보조금 정산</th><th>[시나리오 2] zkPoRL 준비금 증명</th><th>[시나리오 3] 청년기본소득</th></tr>
+      <tr><td>행정 개선 효과</td><td class="h1"><span class="v">매우 높음</span><span class="p">(수기정산 0일화)</span></td><td class="h2"><span class="v">높음</span><span class="p">(실시간 상시 감사)</span></td><td><span class="v" style="font-weight:600">보통</span><span class="p">(기존 카드망과 유사)</span></td></tr>
+      <tr><td>이해관계자 수</td><td class="h1"><span class="v">4개</span><span class="p">(도-GBSA-기업-컨설팅)</span></td><td class="h2"><span class="v">2개</span><span class="p">(도-준비금은행)</span></td><td><span class="v" style="font-weight:600">수만 명</span><span class="p">(청년, 31개 시군)</span></td></tr>
+      <tr><td>라이브 시연 안정성</td><td class="h1"><span class="v">최상</span><span class="p">(통제된 폐쇄 환경)</span></td><td class="h2"><span class="v">최상</span><span class="p">(시스템 내부 검증)</span></td><td><span class="v" style="font-weight:600">보통</span><span class="p">(모바일 네트워크 의존)</span></td></tr>
+      <tr><td>규제 이슈 저촉 여부</td><td class="h1"><span class="v">없음</span><span class="p">(기업 간 B2B 정산)</span></td><td class="h2"><span class="v">없음</span><span class="p">(수학적 검증 기술)</span></td><td><span class="v" style="font-weight:600">일부 존재</span><span class="p">(전자금융업 이슈)</span></td></tr>
+      <tr class="fin"><td>최종 추천도</td><td class="h1"><span class="pill" style="height:36px;font-size:16px">1순위 (메인 데모 추천)</span></td><td><span class="pill z" style="height:36px;font-size:16px">결합 추천 (보안 백엔드 데모)</span></td><td><span class="pill g" style="height:36px;font-size:16px">후순위 (확장 로드맵 반영)</span></td></tr>
+    </table></div>
+    <div class="recm"><svg class="ic s48"><use href="#i-layers"/></svg>
+      <div><div class="k">연구진 권고안</div><p class="t19"><b>듀얼 시연 구성</b>: 2차 보고회에서는 <span class="em">[시나리오 1(B2B 보조금 자동정산)]을 메인 화면</span>으로 보여주고, 그 뒷단에서 <span class="em">[시나리오 2(zkPoRL 준비금 검증)]가 실시간 작동</span>하는 복합 시연을 제안합니다.</p></div></div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>시나리오 1과 2를 결합하여, 가장 안전하면서도 기술적 완성도가 높은 시연을 완성합니다.</p></div>
+</section>
+
+<style>
+/* S17 wireframes */
+.win{border-radius:12px;border:1.5px solid #CFC6DE;background:#fff;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 6px 18px rgba(45,0,87,.08)}
+.win .bar{flex:none;height:34px;display:flex;align-items:center;gap:6px;padding:0 12px;background:#F3F1F7;border-bottom:1px solid var(--line)}
+.win .bar i{width:9px;height:9px;border-radius:50%;background:#D5CFE0}
+.win .bar span{margin-left:8px;font:700 14.5px/1 var(--G);color:var(--slate);padding-top:2px}
+.win .bar span em{font-style:normal;color:var(--pri);margin-right:6px}
+.win .cn2{flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:9px;justify-content:space-between}
+.wf-l{font:600 16px/1.3 var(--P);color:var(--ink)}
+.sk{height:8px;border-radius:4px;background:#ECE8F2}
+.wf-bar{height:12px;border-radius:6px;background:#ECE8F2;overflow:hidden}
+.wf-bar i{display:block;height:100%;width:62%;background:var(--pri);opacity:.75}
+.wfb{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:#FCFBFE}
+.kpi{flex:1;display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:7px;background:#F3F1F7}
+.sk2{height:14px;border-radius:4px;background:#DCD5E6;width:80%}
+.skr{display:flex;align-items:center;gap:8px;padding:5px 0}
+.skr .dot{flex:none;width:10px;height:10px;border-radius:50%;background:#D5CFE0}
+.skr .sp{flex:none;margin-left:auto;width:44px;height:16px;border-radius:5px;background:#ECE8F2}
+.skr .sp.on{background:var(--pri);opacity:.8}
+.wf-btn{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:8px 14px 6px;border-radius:8px;background:var(--pri);color:#fff;font:700 15px/1 var(--G)}
+.wf-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:8px;background:#F8F7FA;font:600 15.5px/1.25 var(--P)}
+.wf-st{flex:none;display:inline-flex;align-items:center;gap:4px;font:700 13.5px/1 var(--G);padding:5px 8px 3px;border-radius:5px}
+.wf-st.ok{background:#E3F4EA;color:#16784A}
+.wf-st.p{background:var(--soft);color:var(--pri)}
+.vbadge{display:inline-flex;align-items:center;gap:8px;padding:9px 16px 7px;border-radius:8px;background:var(--ok);color:#fff;font:700 17px/1 var(--G)}
+.stepc{width:420px;flex:none;display:flex;flex-direction:column;gap:12px;border-radius:16px;padding:20px;background:#FAF9FC;border:1px solid var(--line)}
+.stepc .it .t18{font-size:20px}
+.stepc .it{flex:1;display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;background:#fff;border:1px solid var(--line)}
+</style>
+<section class="slide" id="s17" data-name="시연화면">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>2차 중간보고 대비 3대 PoC 시연 시나리오(안)<span class="bar"></span><span class="ttl">2차 중간보고 시연 화면 시나리오 프리뷰</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">17 <span>/ 22</span></span></div></div>
+  <h2 class="hl">발주기관 담당자가 실제 작동 화면을 보며 검증할 수 있도록 <em>3대 화면</em>을 준비합니다.</h2>
+  <div class="bd">
+    <div class="row grow" style="flex-direction:row;gap:18px">
+      <div class="col f1" style="gap:0">
+        <div class="row f1" style="gap:0;align-items:stretch">
+          <div class="win f1"><div class="bar"><i></i><i></i><i></i><span><em>[화면 1]</em>경기도청 관리자 포털</span></div>
+            <div class="cn2" style="justify-content:flex-start;gap:10px">
+              <div class="wfb"><div class="wf-l">보조금 총액 및 집행률 모니터링</div><div class="wf-bar"><i></i></div>
+                <div class="row" style="gap:8px"><div class="kpi"><div class="sk" style="width:60%"></div><div class="sk2"></div></div><div class="kpi"><div class="sk" style="width:50%"></div><div class="sk2"></div></div><div class="kpi"><div class="sk" style="width:70%"></div><div class="sk2"></div></div></div></div>
+              <div class="wfb f1"><div class="wf-l">기업별 마일스톤 제출 현황</div>
+                <div class="skr"><i class="dot"></i><div class="sk" style="width:58%"></div><i class="sp"></i></div>
+                <div class="skr"><i class="dot"></i><div class="sk" style="width:46%"></div><i class="sp"></i></div>
+                <div class="skr"><i class="dot"></i><div class="sk" style="width:64%"></div><i class="sp on"></i></div></div>
+              <div style="display:flex;align-items:center;gap:10px"><span class="wf-btn"><svg class="ic s24" style="width:18px;height:18px"><use href="#i-check"/></svg>검수 승인</span><svg class="ic s28 c-m"><use href="#i-pointer"/></svg><span class="em" style="font-size:16px">클릭!</span></div>
+            </div></div>
+          <div class="ar c-m" style="width:118px"><span>대금 즉시 입금</span><i></i></div>
+          <div class="win f1"><div class="bar"><i></i><i></i><i></i><span><em>[화면 2]</em>컨설팅사 정산 지갑</span></div>
+            <div class="cn2" style="justify-content:flex-start;gap:10px">
+              <div class="wfb" style="background:var(--soft);border-color:#E2D6F3"><div class="wf-l" style="color:var(--slate);font-size:15px">수령 토큰 잔액</div><div style="font:700 28px/1.2 var(--G);color:var(--pri);letter-spacing:-.5px">75,000,000 ST</div></div>
+              <div class="wf-row"><span>[1차 착수금 30%]</span><span class="wf-st ok"><svg class="ic s24" style="width:14px;height:14px;stroke-width:3"><use href="#i-check"/></svg>정산 완료</span></div>
+              <div class="wf-row" style="border:1.5px solid var(--pri);background:#fff"><span>[2차 잔여금 70%]</span><span class="wf-st p">승인 즉시 수취</span></div>
+              <div class="wfb f1" style="justify-content:center"><div class="skr"><i class="dot"></i><div class="sk" style="width:52%"></div><div class="sk" style="width:18%;margin-left:auto"></div></div><div class="skr"><i class="dot"></i><div class="sk" style="width:40%"></div><div class="sk" style="width:22%;margin-left:auto"></div></div></div>
+            </div></div>
+        </div>
+        <div style="height:58px;display:flex;padding-left:75%"><div class="va ctr c-z" style="margin:0"><i></i><span>증명 자동 갱신</span></div></div>
+        <div class="win"><div class="bar"><i></i><i></i><i></i><span><em style="color:var(--proof)">[화면 3]</em>zkPoRL 실시간 준비금 감사 대시보드</span></div>
+          <div class="cn2" style="flex-direction:row;align-items:center;gap:16px;padding:14px 16px">
+            <div class="f1" style="padding:8px 12px;border-radius:8px;background:#F8F7FA"><div class="wf-l" style="color:var(--slate);font-size:15px">은행 예치 잔액</div><div style="font:700 21px/1.3 var(--G)">250,000,000 KRW</div></div>
+            <div style="font:700 22px/1 var(--G);color:var(--muted)">|</div>
+            <div class="f1" style="padding:8px 12px;border-radius:8px;background:#F8F7FA"><div class="wf-l" style="color:var(--slate);font-size:15px">온체인 토큰</div><div style="font:700 21px/1.3 var(--G)">250,000,000 ST</div></div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start"><div class="wf-l" style="color:var(--slate);font-size:15px">영지식 암호 증명 상태</div><span class="vbadge"><svg class="ic s24" style="color:#fff"><use href="#i-shield"/></svg>VERIFIED - 100% 일치</span></div>
+          </div></div>
+      </div>
+      <div class="stepc">
+        <div class="kick">시연 진행 순서 (약 10분 소요 예정)</div>
+        <div class="it"><span class="num sm">1</span><p class="t18">관리자가 ESG 컨설팅 사업을 생성하고 보조금 토큰을 배정합니다.</p></div>
+        <div class="it"><span class="num sm">2</span><p class="t18">컨설팅사가 산출물을 등록하면 관리자가 화면에서 '승인'을 누릅니다.</p></div>
+        <div class="it"><span class="num sm z">3</span><p class="t18">컨설팅사 지갑에 대금이 즉시 입금되고, 하단 감사 대시보드에 영지식 증명이 자동 갱신됩니다.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>직관적인 사용자 인터페이스를 통해 블록체인 자동 정산의 실효성을 체감할 수 있습니다.</p></div>
+</section>
+
+<style>
+/* S18 */
+.rq{flex:1;display:flex;flex-direction:column;border-radius:16px;border:2px solid var(--pri);background:#fff;overflow:hidden}
+.rq .hd{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--soft);border-bottom:1px solid #E2D6F3}
+.rq .hd .h3{font-size:21px}
+.rq .rw{flex:1;display:flex;gap:14px;align-items:center;padding:12px 20px;border-bottom:1px dashed var(--line)}
+.rq .rw:last-child{border-bottom:0}
+.rq .rw .k{flex:none;width:118px;display:flex;align-items:center;gap:8px;font:700 16px/1.2 var(--G);color:var(--pri)}
+.ttlbar{display:flex;align-items:center;justify-content:center;gap:12px;font:700 22px/1.3 var(--G);color:var(--navy)}
+.ttlbar::before,.ttlbar::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,#CDBDE6)}
+.ttlbar::after{background:linear-gradient(90deg,#CDBDE6,transparent)}
+.safe{display:flex;gap:16px;align-items:center;border-radius:14px;padding:14px 20px;background:#FAF9FC;border:1px solid var(--line)}
+</style>
+<section class="slide" id="s18" data-name="협조요청">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>2차 중간보고 대비 3대 PoC 시연 시나리오(안)<span class="bar"></span><span class="ttl">시연 완성을 위해 발주기관으로부터 필요한 협조 사항</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">18 <span>/ 22</span></span></div></div>
+  <h2 class="hl">실제와 유사한 환경을 구현하기 위해 <em>가상 표본 데이터와 실무 인터뷰</em>가 필요합니다.</h2>
+  <div class="bd" style="gap:14px">
+    <div class="ttlbar">2차 중간보고 PoC 성공을 위한 2대 협조 요청</div>
+    <div class="row grow" style="flex-direction:row;gap:18px">
+      <div class="rq">
+        <div class="hd"><span class="num">1</span><span class="h3">ESG 보조금 사업 표본 서식 및 프로세스 공유</span></div>
+        <div class="rw"><span class="k"><svg class="ic s24"><use href="#i-target"/></svg>대상</span><p class="t19">도 기업육성과 또는 GBSA ESG 컨설팅 사업</p></div>
+        <div class="rw"><span class="k"><svg class="ic s24"><use href="#i-doc"/></svg>내용</span><p class="t19">실제 작성되는 착수보고서·최종보고서 양식, 검수 체크리스트 항목</p></div>
+        <div class="rw"><span class="k"><svg class="ic s24"><use href="#i-eyeoff"/></svg>데이터 처리</span><p class="t19">기업명, 대표자명, 금액 등 모든 식별정보는 '가명/가상' 처리</p></div>
+      </div>
+      <div class="rq">
+        <div class="hd"><span class="num">2</span><span class="h3">사업 담당 부서와의 실무 인터뷰 1회 주선</span></div>
+        <div class="rw"><span class="k"><svg class="ic s24"><use href="#i-msg"/></svg>목적</span><p class="t19">현행 보조금 지급·정산 시 가장 번거로운 수기 작업 및 애로사항 청취</p></div>
+        <div class="rw"><span class="k"><svg class="ic s24"><use href="#i-clock"/></svg>소요 시간</span><p class="t19">30분 내외 (온라인 화상회의 가능)</p></div>
+        <div class="rw"><span class="k"><svg class="ic s24"><use href="#i-chart"/></svg>산출물</span><p class="t19">인터뷰 내용을 PoC 시연 시나리오의 '개선 전/후 비교' 데이터로 활용</p></div>
+      </div>
+    </div>
+    <div class="safe"><div class="icb"><svg class="ic"><use href="#i-shield"/></svg></div><div><div class="kick" style="margin-bottom:6px">행정 안전장치</div><p class="t19">공공 데이터 보안 규정을 준수하며, 일체의 비공개 실자료 외부 유출 없이 100% 가상화 데이터로만 테스트를 진행합니다.</p></div></div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>실무 서식과 인터뷰 1회 협조만으로도 완벽한 맞춤형 시연을 구현할 수 있습니다.</p></div>
+</section>
+
+<style>
+/* S19 gantt */
+.gt{position:relative;border:1px solid var(--line);border-radius:14px;padding:10px 16px 12px;background:#fff}
+.gr{display:flex;align-items:center;min-height:38px}
+.gr .lab{width:330px;flex:none;font:600 17.5px/1.25 var(--P);padding-right:12px}
+.gr .trk{flex:1;position:relative;height:38px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(12.5% - 1px),#EEEBF3 calc(12.5% - 1px),#EEEBF3 12.5%)}
+.gr.hd .trk{background:none;display:grid;grid-template-columns:repeat(8,1fr);height:auto}
+.gr.hd .trk span{text-align:center;font:700 15px/1.2 var(--G);color:var(--slate);padding:6px 0 4px}
+.gr.hd .trk span em{display:block;font:500 12px/1 var(--P);color:var(--muted);font-style:normal;margin-bottom:3px}
+.gr.sc{min-height:30px;border-top:1px solid var(--line);margin-top:4px}
+.gr.sc .lab{font:700 15px/1 var(--G);color:var(--pri);padding-top:6px}
+.gb{position:absolute;top:8px;height:22px;border-radius:6px;display:flex;align-items:center;padding:0 8px;font:700 12.5px/1 var(--G);color:#fff;white-space:nowrap}
+.gb.done{background:var(--pri)}
+.gb.act{background:repeating-linear-gradient(-45deg,var(--act) 0 8px,#8C68B5 8px 14px)}
+.gb.plan{background:var(--soft);border:1.5px solid #B9A2DA;color:var(--pri)}
+.gb.crit{background:var(--navy)}
+.dia{position:absolute;top:9px;width:20px;height:20px;transform:translateX(-50%) rotate(45deg);background:#fff;border:3px solid var(--navy)}
+.today{position:absolute;top:66px;bottom:34px;border-left:2.5px dashed var(--pri);z-index:2}
+.today span{position:absolute;top:4px;left:8px;white-space:nowrap;font:700 13px/1 var(--G);color:#fff;background:var(--pri);padding:5px 8px 3px;border-radius:5px}
+.mcs{display:flex;gap:12px}
+.mc{flex:1;border-radius:12px;padding:12px 14px;border:1px solid var(--line);background:#fff;display:flex;flex-direction:column;gap:6px}
+.mc .m{font:700 17px/1.2 var(--G);color:var(--pri)}
+.mc.hi{border:2px solid var(--navy);background:var(--soft)}
+.mc.hi .m{color:var(--navy)}
+</style>
+<section class="slide" id="s19" data-name="로드맵">
+  <div class="top"><div class="sec"><span class="pt">PART V</span>향후 추진계획 및 의사결정 요청<span class="bar"></span><span class="ttl">잔여 과업 추진 로드맵 (1차 보고 이후)</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">19 <span>/ 22</span></span></div></div>
+  <h2 class="hl">1차 보고 직후 시나리오를 연동하여, <em>5개월 차 2차 보고회에서 라이브 시연을 완수</em>합니다.</h2>
+  <div class="bd" style="gap:12px">
+    <div class="gt grow" style="justify-content:space-between">
+      <div class="gr hd"><div class="lab" style="font:700 15px/1.2 var(--G);color:var(--ink)">경기도 스테이블코인 연구용역 잔여 공정표</div><div class="trk"><span><em>2026</em>7월</span><span><em>&nbsp;</em>8월</span><span><em>&nbsp;</em>9월</span><span><em>&nbsp;</em>10월</span><span><em>&nbsp;</em>11월</span><span><em>&nbsp;</em>12월</span><span><em>2027</em>1월</span><span><em>&nbsp;</em>2월</span></div></div>
+      <div class="gr sc"><div class="lab">1차 완료</div></div>
+      <div class="gr"><div class="lab">환경 및 법제 분석 (v0.8)</div><div class="trk"><div class="gb done" style="left:0;width:43.75%">완료</div></div></div>
+      <div class="gr"><div class="lab">PoC 핵심 기능 개발 (80%)</div><div class="trk"><div class="gb done" style="left:12.5%;width:31.25%">완료</div></div></div>
+      <div class="gr sc"><div class="lab">후속 과업</div></div>
+      <div class="gr"><div class="lab">시나리오 데이터 연동 및 UI 완성</div><div class="trk"><div class="gb act" style="left:43.75%;width:18.75%">진행</div></div></div>
+      <div class="gr"><div class="lab" style="color:var(--navy);font-weight:700">[2차 중간보고] PoC 라이브 시연</div><div class="trk"><div class="gb crit" style="left:50%;width:25%"></div><div class="dia" style="left:68.75%"></div></div></div>
+      <div class="gr"><div class="lab">조례안 및 재원조달 계획 수립</div><div class="trk"><div class="gb plan" style="left:62.5%;width:25%"></div></div></div>
+      <div class="gr"><div class="lab">B/C 경제성 분석 및 종합 로드맵</div><div class="trk"><div class="gb plan" style="left:75%;width:25%"></div></div></div>
+      <div class="gr"><div class="lab" style="color:var(--navy);font-weight:700">[최종보고] 최종보고서 납품</div><div class="trk"><div class="gb crit" style="left:87.5%;width:10%"></div><div class="dia" style="left:97.5%"></div></div></div>
+      <div class="today" style="left:calc(16px + 330px + (100% - 32px - 330px) * 0.4375)"><span>1차 중간보고 (현 단계)</span></div>
+      <div class="legend" style="justify-content:flex-end;padding-top:4px"><span style="color:var(--pri)"><i style="height:10px"></i>완료</span><span style="color:var(--act)"><i style="height:10px"></i>진행</span><span style="color:#B9A2DA"><i style="height:10px"></i>예정</span><span style="color:var(--navy)"><i style="height:10px"></i>핵심 마일스톤</span></div>
+    </div>
+    <div class="mcs">
+      <div class="mc"><span class="m">M+4 (11월)</span><p class="t18">선정된 시나리오에 맞추어 표본 데이터 구축 및 UI 연동 완료.</p></div>
+      <div class="mc hi"><span class="m">M+5 (12월)</span><p class="t18"><b>2차 중간보고회 개최 (PoC 단독 라이브 시연 및 전문가 자문)</b>.</p></div>
+      <div class="mc"><span class="m">M+7 (1월)</span><p class="t18">시연 데이터를 바탕으로 정량적 비용 절감(B/C) 분석 완료.</p></div>
+      <div class="mc"><span class="m">M+8 (2월)</span><p class="t18">최종 납품 및 경기도 조례 제정안 패키지 전달.</p></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>철저한 공정 관리를 통해 2차 보고회 시연과 최종 납품을 빈틈없이 완수합니다.</p></div>
+</section>
+
+<style>
+/* S20 */
+.dc{flex:1;display:flex;flex-direction:column;border-radius:16px;border:2px solid var(--pri);background:#fff;overflow:hidden}
+.dc .hd{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;background:var(--pri);color:#fff}
+.dc .hd .n{font:700 15px/1 var(--G);letter-spacing:.6px;opacity:.85}
+.dc .hd .no{font:700 40px/1 var(--G)}
+.dc .tt{padding:20px 22px 0;font:700 25px/1.35 var(--G);letter-spacing:-.4px;color:var(--ink)}
+.dc .ag{flex:1;margin:16px 22px 20px;padding:16px 18px;border-radius:12px;background:var(--soft);display:flex;flex-direction:column;gap:10px;justify-content:center}
+.dc .ag .k{font:700 15px/1 var(--G);color:var(--pri);display:flex;align-items:center;gap:8px}
+.dc .ag p{font:500 23px/1.55 var(--P)}
+.dc .ag{gap:14px}
+.dc.z{border-color:var(--proof)} .dc.z .hd{background:var(--proof)} .dc.z .ag{background:var(--proofsoft)} .dc.z .ag .k{color:var(--proof)}
+.dc.n2{border-color:var(--navy)} .dc.n2 .hd{background:var(--navy)}
+.mean{display:flex;gap:16px;align-items:center;border-radius:14px;padding:14px 20px;background:#FAF9FC;border:1px solid var(--line)}
+</style>
+<section class="slide" id="s20" data-name="의사결정">
+  <div class="top"><div class="sec"><span class="pt">PART V</span>향후 추진계획 및 의사결정 요청<span class="bar"></span><span class="ttl">발주기관 핵심 의사결정 요청사항 (3 Decisions Required)</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">20 <span>/ 22</span></span></div></div>
+  <h2 class="hl">2차 중간보고 시연 성공을 위해 <em>오늘 확정해야 할 3가지 의사결정</em> 사항입니다.</h2>
+  <div class="bd" style="gap:14px">
+    <div class="row grow" style="flex-direction:row;gap:16px">
+      <div class="dc"><div class="hd"><span class="n">의사결정</span><span class="no">01</span></div>
+        <div class="tt">2차 PoC 시연 시나리오 1순위 채택</div>
+        <div class="ag"><span class="k"><svg class="ic s24"><use href="#i-q"/></svg>안건</span><p>[시나리오 1: 중소기업 ESG 보조금 마일스톤 자동 정산]을 메인 실증 대상으로 채택하는 것에 동의하십니까?</p></div></div>
+      <div class="dc z"><div class="hd"><span class="n">의사결정</span><span class="no">02</span></div>
+        <div class="tt">zkPoRL 실시간 준비금 증명 결합</div>
+        <div class="ag"><span class="k"><svg class="ic s24"><use href="#i-q"/></svg>안건</span><p>재정 투명성 입증을 위해 zkPoRL 이상거래 탐지 기능을 시연에 보조 백엔드로 결합하는 것에 동의하십니까?</p></div></div>
+      <div class="dc n2"><div class="hd"><span class="n">의사결정</span><span class="no">03</span></div>
+        <div class="tt">소관부서 실무 인터뷰 및 양식 협조</div>
+        <div class="ag"><span class="k"><svg class="ic s24"><use href="#i-q"/></svg>안건</span><p>시연 데이터 정합성을 위한 기업육성과/GBSA 실무 접촉 및 표준 서식 공유를 지원해 주시겠습니까?</p></div></div>
+    </div>
+    <div class="mean"><div class="icb"><svg class="ic"><use href="#i-flag"/></svg></div><div><div class="kick" style="margin-bottom:6px">의사결정의 의미</div><p class="t19">오늘 3개 안건이 확정되면, 연구진은 내일부터 즉시 맞춤형 시연 데이터 구축에 돌입할 수 있습니다.</p></div></div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>오늘 시나리오를 확정해 주시면, 2차 보고회에서 완성도 높은 라이브 시연을 보여드리겠습니다.</p></div>
+</section>
+
+<style>
+/* S21 */
+.ef{flex:1;display:flex;flex-direction:column;border-radius:16px;border:1.5px solid var(--line);background:#fff;padding:24px 26px;gap:18px}
+.ef .hd{display:flex;align-items:center;gap:14px}
+.ef .hd .icb{width:72px;height:72px}
+.ef .hd .h3{font-size:26px}
+.ef .kp{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:22px 0;border-top:2px solid var(--pri);border-bottom:1px solid var(--line)}
+.ef .kp div{display:flex;align-items:center;gap:10px;font:700 26px/1.35 var(--G);color:var(--pri);letter-spacing:-.4px}
+.ef .kp .ic{color:var(--pri)}
+.ef .ct{display:flex;flex-direction:column;gap:8px;padding:18px 18px;border-radius:12px;background:#F8F7FA;min-height:150px}
+.ef .ct p{font-size:20.5px}
+.ef.hi .ct{background:#fff}
+.ef .ct .k{font:700 15px/1 var(--G);color:var(--muted)}
+.ef.z .kp{border-top-color:var(--proof)} .ef.z .kp div,.ef.z .kp .ic{color:var(--proof)}
+.ef.hi{background:var(--soft);border:2px solid var(--pri)}
+</style>
+<section class="slide" id="s21" data-name="기대효과">
+  <div class="top"><div class="sec"><span class="pt">PART V</span>향후 추진계획 및 의사결정 요청<span class="bar"></span><span class="ttl">기대 효과: 경기도의 디지털 금융 행정 선도성 확보</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">21 <span>/ 22</span></span></div></div>
+  <h2 class="hl">경기도는 중앙정부 규제 입법화 이전에 <em>지자체 최초의 스마트 정산 모델을 선점</em>합니다.</h2>
+  <div class="bd">
+    <div class="row grow" style="flex-direction:row;gap:16px">
+      <div class="ef"><div class="hd"><div class="icb"><svg class="ic s40"><use href="#i-down"/></svg></div><span class="h3">1. 행정 비용 혁신</span></div>
+        <div class="kp"><div><svg class="ic s24"><use href="#i-check"/></svg>보조금 정산 공수 80% 감축</div><div><svg class="ic s24"><use href="#i-check"/></svg>가맹점 수수료 0원화 실현</div></div>
+        <div class="ct"><span class="k">도정 발전 기여도</span><p class="t19"><b>행정 혁신</b>: 종이 영수증과 수기 검수에 의존하던 보조금 정산을 100% 디지털화합니다.</p></div></div>
+      <div class="ef z"><div class="hd"><div class="icb z"><svg class="ic s40"><use href="#i-shield"/></svg></div><span class="h3">2. 재정 투명성 극대화</span></div>
+        <div class="kp"><div><svg class="ic s24"><use href="#i-check"/></svg>zkPoRL 수학적 실시간 감사</div><div><svg class="ic s24"><use href="#i-check"/></svg>부정수급 및 유용 원천 차단</div></div>
+        <div class="ct"><span class="k">도정 발전 기여도</span><p class="t19"><b>도민 신뢰</b>: 지자체 최초로 영지식 증명 기술을 도입하여 혈세 낭비 우려를 불식합니다.</p></div></div>
+      <div class="ef hi"><div class="hd"><div class="icb w"><svg class="ic s40"><use href="#i-flag"/></svg></div><span class="h3">3. 정책 주도권 선점</span></div>
+        <div class="kp"><div><svg class="ic s24"><use href="#i-check"/></svg>중앙정부 가상자산 2단계</div><div style="padding-left:34px;margin-top:-16px">법제화 전 지자체 표준 선점</div></div>
+        <div class="ct"><span class="k">도정 발전 기여도</span><p class="t19"><b>선도적 위상</b>: 한국은행 CBDC 실증 및 정부 입법 논의에서 경기도 모델이 레퍼런스로 자리 잡습니다.</p></div></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>행정 효율화와 예산 투명성을 동시에 달성하여 경기도의 디지털 혁신을 증명합니다.</p></div>
+</section>
+
+<style>
+/* S22 */
+.qa{background:linear-gradient(180deg,#FFFFFF 0%,#FBF9FE 60%,#F3EDFB 100%)}
+.qa .ctr{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding-bottom:10px;text-align:center;position:relative}
+.qa .qbig{font:700 104px/1 var(--G);letter-spacing:-2px;background:linear-gradient(90deg,var(--pri),var(--proof));-webkit-background-clip:text;background-clip:text;color:transparent;padding-top:6px}
+.qa .gl{width:120px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--pri),var(--proof))}
+.qa .msg2{font:700 32px/1.4 var(--G);letter-spacing:-.6px;color:var(--ink)}
+.qcard{width:1040px;border-radius:18px;background:#fff;border:1px solid var(--line);box-shadow:0 14px 40px rgba(45,0,87,.10);padding:30px 36px;display:grid;grid-template-columns:1fr 1.25fr;gap:24px;text-align:left}
+.qcard .rw{display:flex;gap:14px;align-items:flex-start;padding:8px 0}
+.qcard .rw .k{font:700 15px/1 var(--G);color:var(--pri);margin-bottom:8px}
+.qcard ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.qcard li{display:flex;align-items:center;gap:10px;font:600 19.5px/1.35 var(--P);padding:11px 14px;border-radius:9px;background:#F8F7FA}
+.qcard li .ic{color:var(--pri)}
+.deco2{flex:1;height:2px;background:linear-gradient(90deg,transparent,var(--pri))}
+.deco2.r{background:linear-gradient(90deg,var(--proof),transparent)}
+.deco{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--pri) 25%,var(--proof) 75%,transparent)}
+</style>
+<section class="slide qa" id="s22" data-name="QnA">
+  <div class="top"><div class="sec"><span class="pt">PART V</span>향후 추진계획 및 의사결정 요청<span class="bar"></span><span class="ttl">질의응답 (Q&amp;A)</span></div><div class="meta"><img src="assets/zkrypto_lockup_color.svg" alt="ZKRYPTO"><span class="pn">22 <span>/ 22</span></span></div></div>
+  <div class="ctr">
+    <div style="display:flex;align-items:center;gap:36px;width:100%"><span class="deco2"></span><div class="qbig">Q&amp;A</div><span class="deco2 r"></span></div>
+    <div class="gl"></div>
+    <div class="msg2">경청해 주셔서 감사합니다. 질의사항에 성실히 답변드리겠습니다.</div>
+    <div class="qcard">
+      <div>
+        <div class="rw"><div class="icb"><svg class="ic"><use href="#i-team"/></svg></div><div><div class="k">문의처</div><p class="t19">(주)지크립토 컨소시엄 연구사업팀</p></div></div>
+        <div class="rw"><div class="icb"><svg class="ic"><use href="#i-mail"/></svg></div><div><div class="k">연락처</div><p class="t19">사업책임자 / 연구책임자 연락처</p></div></div>
+      </div>
+      <div><div class="k" style="font:700 15px/1 var(--G);color:var(--pri);margin:8px 0 12px">부속 산출물 안내</div>
+        <ul><li><svg class="ic s24"><use href="#i-file"/></svg>중간보고서 초안 (v0.8 텍스트 통합본)</li><li><svg class="ic s24"><use href="#i-file"/></svg>38개 과업요구 상세 이행 점검표</li><li><svg class="ic s24" style="color:var(--proof)"><use href="#i-file"/></svg>PoC 스마트계약 및 zkPoRL 회로 기술 명세서</li></ul></div>
+    </div>
+  </div>
+  <div style="height:6px;margin:0 -56px -22px;background:linear-gradient(90deg,var(--navy),var(--pri) 45%,var(--proof))"></div>
+</section>
+</div>
+</body>
+</html>

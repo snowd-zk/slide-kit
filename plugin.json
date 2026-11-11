@@ -1,0 +1,8 @@
+{
+  "name": "slide-kit",
+  "version": "1.0.0",
+  "description": "Production 16:9 HTML presentation deck engineering system for Google Antigravity & AI agents (with Rust layout inspection and rendering)",
+  "author": "snowd-zk",
+  "license": "MIT",
+  "skills": ["skills/slide-kit"]
+}

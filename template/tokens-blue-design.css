@@ -1,0 +1,44 @@
+/* =====================================================================
+   zkrypto Blue Design System — Pure Tokens (1440x810, 16:9)
+   - Standard B2B, Finance, Deep-Tech Clean Theme
+   - Single Source of Truth for Blue Design Palette
+   ===================================================================== */
+:root {
+  /* 1. Core Backgrounds */
+  --bg-white: #FFFFFF;
+  --bg-soft: #E7F3FF;
+  --bg-pale: #F3F8FD;
+  --bg-gray: #EDF1F5;
+  --bg-card: #FFFFFF;
+
+  /* 2. Ink & Typography */
+  --ink: #101B2F;        /* Main Titles, Headers, Primary Body */
+  --ink-secondary: #334155;
+  --muted: #50617B;      /* Captions, Subtitles, Meta Information */
+  --muted-light: #8A99AD;
+
+  /* 3. Primary Accents */
+  --pri: #0866F5;        /* Electric Blue: Primary Buttons, Active Accents, Key Highlights */
+  --darkBlue: #0649C8;   /* Dark Blue: Headers, Table Headers, Focused Cards */
+  --mid: #C7E3FF;        /* Soft Accent Tint */
+  --line: #BDD5EC;       /* Crisp Border & Dividing Lines */
+  --line-light: #E2EBF4;
+
+  /* 4. Semantic Status (Excludes Red / Pure Blue Spectrum) */
+  --status-keep: #6D6E71;      /* [기존유지] Slate Gray on #F1F5F9 */
+  --status-keep-bg: #F1F5F9;
+  --status-adapt: #0649C8;     /* [대응개발] Deep Blue on #E0EEFF */
+  --status-adapt-bg: #E0EEFF;
+  --status-rebuild: #00939A;   /* [재구축] Proof Teal on #E6F7F7 */
+  --status-rebuild-bg: #E6F7F7;
+  --status-new: #0866F5;       /* [신규구축] Electric Blue on #E7F3FF */
+  --status-new-bg: #E7F3FF;
+}
+
+/* Base resets & typography mapping */
+body {
+  background-color: var(--bg-white);
+  color: var(--ink);
+  font-family: 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+  word-break: keep-all;
+}

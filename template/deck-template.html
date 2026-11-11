@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>발표 제목을 여기에</title>
+<!--
+  Codex slide kit — deck template (1440x810, 16:9)
+  - 새 덱: 이 파일을 decks/<slug>/deck-src.html 로 복사하고 template/assets/ 도 decks/<slug>/assets/ 로 복사한다.
+  - 아래 샘플 슬라이드(section.slide)는 컴포넌트별 예시 1개씩이다. 필요한 것만 복제·수정하고 나머지는 지운다.
+  - 색은 :root 토큰 블록에서만 바꾼다. 컴포넌트 CSS에 색 코드를 직접 쓰지 않는다.
+  - 폰트 url 경로는 상관없다. build.py가 파일명으로 <kit>/fonts/ 에서 찾아 서브셋·내장한다.
+-->
+<style>
+/*FONTS-BEGIN — 제목/강조 = Gmarket Sans(DeckG), 본문 = Pretendard(DeckP). 이 6개 굵기만 사용한다. */
+@font-face{font-family:'DeckG';src:url('../fonts/GmarketSansTTFBold.ttf') format('truetype');font-weight:700;font-display:block;}
+@font-face{font-family:'DeckG';src:url('../fonts/GmarketSansTTFMedium.ttf') format('truetype');font-weight:500;font-display:block;}
+@font-face{font-family:'DeckP';src:url('../fonts/Pretendard-Regular.otf') format('opentype');font-weight:400;font-display:block;}
+@font-face{font-family:'DeckP';src:url('../fonts/Pretendard-Medium.otf') format('opentype');font-weight:500;font-display:block;}
+@font-face{font-family:'DeckP';src:url('../fonts/Pretendard-SemiBold.otf') format('opentype');font-weight:600;font-display:block;}
+@font-face{font-family:'DeckP';src:url('../fonts/Pretendard-Bold.otf') format('opentype');font-weight:700;font-display:block;}
+/*FONTS-END*/
+
+/* =====================================================================
+   PALETTE TOKENS — 색 변경은 이 블록에서만.
+   (1) 핵심 색 12개만 바꾸면 (2) 파생 색은 color-mix로 자동으로 따라온다.
+   ===================================================================== */
+:root{
+  /* (1) 핵심 색 */
+  --ink:#171222;        /* 제목·본문 글자 */
+  --pri:#4B1C87;        /* 주 색: 강조 문구, 배지, 핵심 카드 테두리, 기본 화살표 */
+  --navy:#2D0057;       /* 짙은 색: 표 머리, 핵심 요약 바, 핵심 마일스톤 */
+  --proof:#00939A;      /* 보조 강조색(청록): 두 번째 흐름·검증·대비 포인트 */
+  --act:#663B93;        /* 보조 액센트: 진행 중, 승인 흐름 */
+  --slate:#5A5470;      /* 보조 설명 글자, 회색 화살표 */
+  --muted:#8A8499;      /* 흐린 글자 */
+  --line:#E3DFEC;       /* 테두리·구분선 */
+  --soft:#F3EDFB;       /* 주 색 연한 배경(강조 카드) */
+  --proofsoft:#E6F5F5;  /* 보조 강조색 연한 배경 */
+  --ok:#1E9E5A;         /* 정상·승인(녹색) */
+  --bad:#D23F3F;        /* 경고·실패(적색) */
+
+  /* (2) 파생 색 — 보통 수정 불필요 */
+  --soft-bd:color-mix(in srgb,var(--pri) 16%,#fff);
+  --pri-line:color-mix(in srgb,var(--pri) 28%,#fff);
+  --pri-mid:color-mix(in srgb,var(--pri) 40%,#fff);
+  --pri-light:color-mix(in srgb,var(--pri) 52%,#fff);
+  --pri-2:color-mix(in srgb,var(--pri) 80%,#fff);
+  --act-2:color-mix(in srgb,var(--act) 70%,#fff);
+  --dash:color-mix(in srgb,var(--pri) 22%,#fff);
+  --panel:color-mix(in srgb,var(--pri) 3%,#fff);
+  --panel2:color-mix(in srgb,var(--slate) 5%,#fff);
+  --panel3:color-mix(in srgb,var(--pri) 2%,#fff);
+  --grid:color-mix(in srgb,var(--slate) 10%,#fff);
+  --sk:color-mix(in srgb,var(--slate) 12%,#fff);
+  --sk2:color-mix(in srgb,var(--slate) 22%,#fff);
+  --shadow:color-mix(in srgb,var(--pri) 16%,transparent);
+  --shadow-sm:color-mix(in srgb,var(--navy) 9%,transparent);
+  --cover-mid:color-mix(in srgb,var(--pri) 2%,#fff);
+  --cover-end:color-mix(in srgb,var(--pri) 9%,#fff);
+  --ok-ink:color-mix(in srgb,var(--ok) 80%,#000);
+  --ok-bg:color-mix(in srgb,var(--ok) 5%,#fff);
+  --ok-bd:color-mix(in srgb,var(--ok) 28%,#fff);
+  --ok-soft:color-mix(in srgb,var(--ok) 12%,#fff);
+  --bad-ink:color-mix(in srgb,var(--bad) 82%,#000);
+  --bad-bg:color-mix(in srgb,var(--bad) 5%,#fff);
+  --bad-bd:color-mix(in srgb,var(--bad) 30%,#fff);
+
+  /* 폰트 스택 */
+  --G:'DeckG','DeckP';--P:'DeckP';
+}
+
+/* ---------- base / canvas ---------- */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#4a4458}
+body{font-family:var(--P);color:var(--ink);-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+.deck{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 0}
+.slide{width:1440px;height:810px;position:relative;overflow:hidden;background:#fff;display:flex;flex-direction:column;padding:0 56px 22px;flex:none}
+@media print{
+  @page{size:1440px 810px;margin:0}
+  html,body{background:#fff}
+  .deck{display:block;padding:0}
+  .slide{page-break-after:always;break-after:page}
+}
+/* ---------- chrome: top bar / headline / body / takeaway ---------- */
+.top{height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.sec{display:flex;align-items:center;gap:12px;font:500 15px/1 var(--G);color:var(--pri);letter-spacing:.2px}
+.sec .pt{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:6px;background:var(--pri);color:#fff;font-weight:700;font-size:13px;padding-top:2px}
+.sec .ttl{font:500 15px/1 var(--P);color:var(--slate)}
+.sec .bar{width:1px;height:14px;background:var(--line)}
+.meta{display:flex;align-items:center;gap:16px}
+.meta img{height:17px;display:block}
+.pn{font:700 15px/1 var(--G);color:var(--ink);letter-spacing:.5px;padding-top:2px}
+.pn span{color:var(--muted);font-weight:500}
+.hl{flex:none;margin:20px 0 18px;font:700 34px/1.34 var(--G);color:var(--ink);letter-spacing:-.8px;text-wrap:balance}
+.hl em{font-style:normal;color:var(--pri)}
+.hl em.z{color:var(--proof)}
+.bd{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.tk{flex:none;margin-top:16px;height:66px;background:var(--navy);border-radius:12px;display:flex;align-items:center;gap:20px;padding:0 28px;color:#fff}
+.tk .lb{flex:none;font:700 15px/1 var(--G);padding:7px 12px 5px;border:1.5px solid rgba(255,255,255,.55);border-radius:6px;letter-spacing:.3px}
+.tk p{font:600 21px/1.35 var(--P);letter-spacing:-.2px}
+/* ---------- primitives ---------- */
+.row{display:flex;gap:18px}
+.col{display:flex;flex-direction:column;gap:14px}
+.f1{flex:1;min-width:0}
+.ar.f1,.va.f1{flex:1}
+.grow{flex:1;min-height:0;display:flex;flex-direction:column}
+.grow>table{flex:1;height:100%}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.card.s{background:var(--soft);border-color:var(--soft-bd)}
+.card.hi{border:3px solid var(--pri);background:var(--soft)}
+.card.z{border:2px solid var(--proof)}
+.h3{font:700 21px/1.3 var(--G);color:var(--ink);letter-spacing:-.3px}
+.h4{font:700 19px/1.3 var(--G);color:var(--pri);letter-spacing:-.2px}
+.kick{font:700 14px/1 var(--G);color:var(--pri);letter-spacing:.6px}
+.t22{font-size:22px;line-height:1.45}
+.t20{font-size:20px;line-height:1.45}
+.t19{font-size:19px;line-height:1.45}
+.t18{font-size:18px;line-height:1.45}
+.sl{color:var(--slate)}
+b,.b{font-weight:700}
+.em{color:var(--pri);font-weight:700}
+.emz{color:var(--proof);font-weight:700}
+ul.ls{list-style:none;display:flex;flex-direction:column;gap:6px}
+ul.ls li{position:relative;padding-left:16px}
+ul.ls li::before{content:'';position:absolute;left:2px;top:.66em;width:6px;height:6px;border-radius:50%;background:var(--pri)}
+ul.ls.z li::before{background:var(--proof)}
+.num{flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--pri);color:#fff;font:700 17px/1 var(--G);padding-top:2px}
+.num.z{background:var(--proof)}
+.num.sm{width:28px;height:28px;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:6px;height:30px;padding:2px 12px 0;border-radius:15px;font:700 14px/1 var(--G);background:var(--pri);color:#fff;white-space:nowrap}
+.pill.z{background:var(--proof)}
+.pill.o{background:#fff;color:var(--pri);border:1.5px solid var(--pri)}
+.pill.g{background:var(--line);color:var(--slate)}
+.chip{display:flex;align-items:center;gap:10px;border-radius:10px;padding:9px 14px;background:#fff;border:1px solid var(--line);font-size:18px;line-height:1.35}
+.chip .k{flex:none;font:700 15px/1 var(--G);color:var(--slate);padding-top:2px}
+/* icons: <svg class="ic s28"><use href="#i-name"/></svg> — 색은 currentColor(부모 color) */
+.ic{width:32px;height:32px;flex:none;stroke-width:1.5;display:block}
+.ic.s24{width:24px;height:24px;stroke-width:2}
+.ic.s28{width:28px;height:28px;stroke-width:1.72}
+.ic.s40{width:40px;height:40px;stroke-width:1.2}
+.ic.s48{width:48px;height:48px;stroke-width:1}
+.icb{flex:none;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:12px;background:var(--soft);color:var(--pri)}
+.icb.z{background:var(--proofsoft);color:var(--proof)}
+.icb.w{background:#fff}
+/* ---------- labeled arrows (라벨 필수) ----------
+   가로: <div class="ar c-m"><span>무엇이 이동</span><i></i></div>   (.l 왼쪽, .bi 양방향, .dash 점선, .f1 늘이기)
+   세로: <div class="va c-m"><i></i><span>무엇이 이동</span></div>   (.bi 양방향, .ctr 중앙선+옆 라벨)
+   색: .c-m 주색 / .c-d 회색 / .c-z 보조강조 / .c-a 액센트 / .c-r 적색 / .c-g 녹색 */
+.ar{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:var(--pri);padding:0 4px}
+.ar>span{font:700 15px/1.2 var(--P);text-align:center;white-space:nowrap}
+.ar>i{display:block;position:relative;width:100%;height:2.5px;background:currentColor;border-radius:2px}
+.ar>i::after{content:'';position:absolute;right:-3px;top:50%;transform:translateY(-50%);border-left:12px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.ar.l>i::after{right:auto;left:-3px;border-left:0;border-right:12px solid currentColor}
+.ar.bi>i::before{content:'';position:absolute;left:-3px;top:50%;transform:translateY(-50%);border-right:12px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.ar.dash>i{background:repeating-linear-gradient(90deg,currentColor 0 7px,transparent 7px 12px)}
+.va{flex:none;display:flex;align-items:center;justify-content:center;gap:12px;color:var(--pri)}
+.va>i{display:block;position:relative;width:2.5px;height:100%;background:currentColor;border-radius:2px}
+.va>i::after{content:'';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);border-top:12px solid currentColor;border-left:7px solid transparent;border-right:7px solid transparent}
+.va.bi>i::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);border-bottom:12px solid currentColor;border-left:7px solid transparent;border-right:7px solid transparent}
+.va>span{font:700 15px/1.2 var(--P);white-space:nowrap;background:#fff;padding:3px 8px;border-radius:6px;border:1px solid currentColor}
+.va.ctr{position:relative;width:2.5px;margin:0 auto;gap:0}
+.va.ctr>i{width:2.5px}
+.va.ctr>span{position:absolute;left:18px;top:50%;transform:translateY(-50%)}
+.c-m{color:var(--pri)} .c-d{color:var(--slate)} .c-z{color:var(--proof)} .c-a{color:var(--act)} .c-r{color:var(--bad)} .c-g{color:var(--ok)}
+.legend{display:flex;gap:18px;align-items:center;font:500 15px/1 var(--P);color:var(--slate)}
+.legend i{display:inline-block;width:22px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle;background:currentColor}
+.legend span{display:inline-flex;align-items:center}
+/* ---------- table ---------- */
+table.tb{width:100%;border-collapse:separate;border-spacing:0;font-size:18px;line-height:1.38}
+.tb th{font:700 16px/1.3 var(--G);color:#fff;background:var(--navy);padding:13px 14px 11px;text-align:left}
+.tb th:first-child{border-top-left-radius:10px}
+.tb th:last-child{border-top-right-radius:10px}
+.tb td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tb td.c,.tb th.c{text-align:center}
+.tb tr td:first-child{font-weight:700;color:var(--ink)}
+/* table modifier: highlighted last column  <table class="tb hcol"> + td/th class="hc" */
+.tb.hcol td{padding:12px 16px;font-size:19.5px}
+.tb.hcol td:first-child{white-space:nowrap}
+.tb.hcol td.hc{background:var(--soft);color:var(--pri);font-weight:700;border-left:3px solid var(--pri);border-right:3px solid var(--pri)}
+.tb.hcol tr:last-child td.hc{border-bottom:3px solid var(--pri)}
+.tb.hcol th.hc{background:var(--pri);border-left:3px solid var(--pri);border-right:3px solid var(--pri)}
+.tb .rh{display:flex;align-items:center;gap:10px}
+.tb .rh .ic{color:var(--pri)}
+
+/* ---------- COMPONENT: cover ---------- */
+.cover{padding:0;background:linear-gradient(180deg,#FFFFFF 0%,var(--cover-mid) 55%,var(--cover-end) 100%)}
+.cover .img{position:absolute;right:-30px;top:165px;width:900px;height:auto;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 24%,#000 100%),linear-gradient(180deg,transparent 0%,#000 14%,#000 84%,transparent 100%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent 0%,#000 24%,#000 100%),linear-gradient(180deg,transparent 0%,#000 14%,#000 84%,transparent 100%);mask-composite:intersect}
+.cover .txt{position:absolute;left:80px;top:0;bottom:0;width:680px;display:flex;flex-direction:column;justify-content:center;gap:0}
+.cv-logo{position:absolute;left:80px;top:56px;height:26px}
+.cv-org{font:500 24px/1.3 var(--P);color:var(--slate);margin-bottom:22px;display:flex;align-items:center;gap:12px}
+.cv-org::before{content:'';width:36px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--pri),var(--proof))}
+.cv-t{font:700 52px/1.24 var(--G);color:var(--ink);letter-spacing:-1.4px;margin-bottom:22px}
+.cv-s{font:500 28px/1.42 var(--G);color:var(--pri);letter-spacing:-.6px;margin-bottom:40px}
+.cv-line{width:560px;height:1px;background:var(--line);margin-bottom:22px}
+.cv-p{font:500 20px/1.4 var(--P);color:var(--muted);margin-bottom:12px}
+.cv-c{font:700 24px/1.3 var(--G);color:var(--navy)}
+.cover .grad{position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--navy),var(--pri) 45%,var(--proof))}
+
+/* ---------- COMPONENT: milestone steps (.ms > .stp + .ar) ---------- */
+.ms{display:flex;align-items:stretch}
+.stp{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:18px 18px 16px;position:relative}
+.stp .tp{display:flex;align-items:center;justify-content:space-between;height:30px}
+.stp .no{font:700 26px/1 var(--G);color:var(--line)}
+.stp .nm{font:700 25px/1.25 var(--G);color:var(--ink);letter-spacing:-.4px}
+.stp .when{margin-top:auto;font:600 18px/1.3 var(--P);color:var(--slate);display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.stp.cur .when{color:var(--pri);border-color:var(--soft-bd)}
+.stp.nx .when{color:var(--proof)}
+.stp ul{margin-top:6px;gap:10px}
+.stp.cur{border:3px solid var(--pri);background:var(--soft);box-shadow:0 10px 28px var(--shadow)}
+.stp.cur .no{color:var(--pri)}
+.stp.nx{border:2px solid var(--proof)}
+.stp.nx .no{color:var(--proof)}
+.ms .ar{width:104px}
+
+/* ---------- COMPONENT: progress bars in table (.pg) ---------- */
+.pg{display:flex;align-items:center;gap:10px}
+.pg .tr{flex:1;height:12px;border-radius:6px;background:var(--line);overflow:hidden}
+.pg .tr i{display:block;height:100%;border-radius:6px;background:var(--pri)}
+.pg .v{flex:none;width:58px;font:700 19px/1 var(--G);color:var(--pri);text-align:right;padding-top:2px}
+.pg.dev .tr i{background:repeating-linear-gradient(-45deg,var(--act) 0 8px,var(--act-2) 8px 14px)}
+.pg.dev .v{width:auto;color:var(--act)}
+.pg.dev .v small,.pg.tot .v small{font:700 14px/1 var(--P);margin-left:2px}
+.pg.tot .tr i{background:var(--navy)}
+.pg.tot .v{width:auto;color:var(--navy)}
+.tb.prog td{padding:10px 14px;font-size:19px}
+.tb.prog tr.dv td{background:var(--panel)}
+.tb.prog tr.tt td{background:var(--soft);border-bottom:none;font-weight:700}
+.tb.prog tr.tt td:first-child{border-bottom-left-radius:10px}
+.tb.prog tr.tt td:last-child{border-bottom-right-radius:10px}
+.tag{display:inline-flex;align-items:center;height:22px;padding:1px 8px 0;border-radius:5px;font:700 12.5px/1 var(--G);margin-left:8px;vertical-align:2px}
+.tag.d{background:var(--act);color:#fff}
+.tag.r{background:var(--navy);color:#fff}
+.lg2{display:flex;gap:18px;justify-content:flex-end;font:500 15px/1 var(--P);color:var(--slate);margin-bottom:8px}
+.lg2 span{display:inline-flex;align-items:center;gap:7px}
+.lg2 i{width:26px;height:10px;border-radius:5px;display:inline-block}
+
+/* ---------- COMPONENT: AS-IS / TO-BE lanes with flow chain (.lane > .flw > .nd + .ar) ---------- */
+.lane{display:flex;gap:18px;border:1px solid var(--line);border-radius:14px;padding:14px 18px;align-items:stretch}
+.lane .lt{flex:none;width:176px;display:flex;flex-direction:column;justify-content:center;gap:8px;border-right:1px solid var(--line);padding-right:16px}
+.lane .lt .k{font:700 13px/1 var(--G);letter-spacing:.5px}
+.lane .lt .n{font:700 19px/1.32 var(--G);letter-spacing:-.3px}
+.lane .lt .s{font:500 16px/1.3 var(--P);color:var(--slate)}
+.lane.old{background:var(--panel)}
+.lane.old .lt .k{color:var(--muted)}
+.lane.new{background:var(--soft);border:2px solid var(--pri)}
+.lane.new .lt .k{color:var(--pri)}
+.lane .rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;justify-content:space-evenly}
+.flw{display:flex;align-items:center}
+.nd{flex:none;display:flex;align-items:center;justify-content:center;gap:8px;min-height:62px;padding:8px 12px;border-radius:10px;background:#fff;border:1.5px solid var(--line);font:600 18px/1.3 var(--P);text-align:center}
+.nd .ic{color:var(--pri)}
+.nd.p{border-color:var(--pri);color:var(--ink)}
+.nd.dk{background:var(--pri);color:#fff;border-color:var(--pri)}
+.nd.dk .ic{color:#fff}
+.nd.z{border:2px solid var(--proof);background:var(--proofsoft)}
+.nd.z .ic{color:var(--proof)}
+.chips{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:10px}
+.chip .k{width:62px}
+.lane.old .chip .k{color:var(--muted)}
+.lane.new .chip .k{color:var(--pri)}
+.bn{display:flex;gap:14px;align-items:flex-start}
+
+/* ---------- COMPONENT: option cards (.mdl, .mdl.rec = recommended) ---------- */
+.mdl{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:12px;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;background:#fff}
+.mdl.rec{border:3px solid var(--pri);background:var(--soft);box-shadow:0 10px 28px var(--shadow)}
+.mdl .hd{display:flex;align-items:center;justify-content:space-between}
+.mdl .nm{font:700 22px/1.3 var(--G);letter-spacing:-.4px;margin-top:6px}
+.mdl .fl{display:flex;flex-direction:column;align-items:stretch}
+.mdl .fl .nd{min-height:54px;justify-content:flex-start;padding:8px 14px}
+.mdl .fl .va{height:54px}
+.res{border-radius:10px;padding:12px 14px;background:var(--panel2);border:1px solid var(--line)}
+.res .k{font:700 15px/1 var(--G);color:var(--slate);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mdl.rec .res{background:#fff;border-color:var(--soft-bd)}
+.mdl.rec .res .k{color:var(--pri)}
+.vd{border-top:1px dashed var(--dash);padding-top:12px;display:flex;gap:10px;align-items:flex-start}
+.vd .ic{margin-top:2px}
+.vd .k{font:700 14px/1 var(--G);color:var(--muted);margin-bottom:6px}
+
+/* ---------- COMPONENT: definition banner + tree + value cards (.def .tree .val) ---------- */
+.def{border-radius:16px;background:var(--soft);border:2px solid var(--pri);padding:20px 28px;text-align:center}
+.def .k{font:700 16px/1 var(--G);color:var(--pri);letter-spacing:.4px;margin-bottom:12px}
+.def q{display:block;font:700 27px/1.4 var(--G);color:var(--ink);letter-spacing:-.6px;quotes:'“' '”'}
+.tree{height:34px;position:relative}
+.tree::before{content:'';position:absolute;left:16.66%;right:16.66%;top:16px;border-top:2px solid var(--pri-line)}
+.tree i{position:absolute;width:2px;background:var(--pri-line)}
+.val{flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;align-items:flex-start;border:1.5px solid var(--line);border-radius:14px;padding:20px 22px;background:#fff}
+.val .h3{margin-bottom:14px;font-size:30px}
+.val .t20{font-size:25px;line-height:1.5}
+.val .icb{width:76px;height:76px}
+.val.z{border:2px solid var(--proof);background:var(--proofsoft)}
+.val.z .h3{color:var(--proof)}
+.logic{display:flex;gap:14px}
+.logic>div{flex:1;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:12px;background:var(--panel2);border:1px solid var(--line)}
+
+/* ---------- COMPONENT: 3-layer stack (.arch > .lyr + .ldesc + .cn) ---------- */
+.arch{display:grid;grid-template-columns:1fr 400px;column-gap:22px}
+.lyr{border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;justify-content:space-evenly;gap:10px;border:1.5px solid var(--line);background:#fff}
+.lyr .hd{display:flex;align-items:center;gap:12px}
+.lyr .hd .n{font:700 20px/1.2 var(--G);letter-spacing:-.3px}
+.lyr .hd .e{font:500 15px/1.2 var(--P);color:var(--slate)}
+.mods{display:flex;gap:10px;align-items:center}
+.mod{flex:1;display:flex;align-items:center;gap:10px;min-height:62px;padding:10px 12px;border-radius:10px;background:#fff;border:1px solid var(--line);font:600 17.5px/1.3 var(--P)}
+.mod .ic{color:var(--pri)}
+.lyr.l3{background:var(--panel)}
+.lyr.l2{background:var(--soft);border:2px solid var(--pri)}
+.lyr.l1{background:var(--proofsoft);border:2px solid var(--proof)}
+.lyr.l1 .mod .ic{color:var(--proof)}
+.cn{height:52px;display:flex;justify-content:center}
+.ldesc{display:flex;align-items:center;gap:14px;padding:0 4px 0 18px;border-left:3px solid var(--line)}
+.ldesc .k{font:700 18px/1.3 var(--G);color:var(--pri);margin-bottom:6px}
+
+/* ---------- COMPONENT: merge diagram (2 inputs -> 1) (.ln2 .mg .mlab) — 예시는 examples/ S09 ---------- */
+.ln2{border:1px solid var(--line);border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:12px}
+.ln2 .tt{display:flex;align-items:center;gap:10px;font:700 18px/1.2 var(--G)}
+.ln2.old{background:var(--panel)}
+.ln2.old .tt{color:var(--slate)}
+.ln2.zk{background:#fff;border:2px solid var(--proof)}
+.ln2.zk .tt{color:var(--proof)}
+.mg{display:grid;grid-template-columns:200px 130px 1fr 104px 1.15fr;align-items:center}
+.mg .ins{display:flex;flex-direction:column;gap:30px}
+.mg svg.mrg{width:150px;height:150px;display:block;overflow:visible}
+.mlab{position:absolute;font:700 15px/1.2 var(--P);white-space:nowrap;background:#fff;padding:0 4px}
+.okb{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 3px;border-radius:6px;background:var(--proof);color:#fff;font:700 14px/1 var(--G)}
+.rig{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:12px;border:1px solid var(--line);background:#fff}
+
+/* ---------- COMPONENT: donut gauge + checklists (.gauge .lst .met) — 예시는 examples/ S10 ---------- */
+.gauge{width:330px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--soft);border:2px solid var(--pri);border-radius:16px;padding:18px}
+.gauge .ring{position:relative;width:236px;height:236px}
+.gauge .ring svg{width:236px;height:236px;transform:rotate(-90deg)}
+.gauge .ring .v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .ring .v b{font:700 48px/1 var(--G);color:var(--pri);letter-spacing:-2px}
+.gauge .ring .v span{font:600 16px/1.2 var(--P);color:var(--slate);margin-top:6px}
+.gauge .cap{font:700 19px/1.35 var(--G);text-align:center}
+.lst{flex:1;display:flex;flex-direction:column;gap:10px;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px}
+.lst .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.lst .it{flex:1;max-height:78px;display:flex;align-items:center;gap:12px;font:500 19.5px/1.35 var(--P);padding:7px 0;border-bottom:1px dashed var(--line)}
+.lst .it:last-child{border-bottom:0}
+.lst .it .ic{color:var(--pri)}
+.lst.rem{background:var(--panel)}
+.lst.rem .it .ic{color:var(--muted)}
+.met{flex:1;display:flex;gap:14px;align-items:flex-start;border-radius:14px;padding:16px 18px;border:1px solid var(--line);background:#fff}
+
+/* ---------- COMPONENT: two boxes joined by a big labeled arrow (.bx .big .live .adv) — examples/ S11 ---------- */
+.bx{flex:1;border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.bx .it{flex:1;font-size:21px !important;display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;background:#fff;border:1px solid var(--line);font:600 19px/1.3 var(--P)}
+.bx.tech{background:var(--soft);border:2px solid var(--pri)}
+.bx.tech .it .ic{color:var(--pri)}
+.bx.adm{background:#fff;border:2px solid var(--navy)}
+.bx.adm .it{background:var(--panel2)}
+.bx.adm .it .ic{color:var(--navy)}
+.big{display:flex;flex-direction:column;align-items:center;justify-content:center;width:170px;flex:none;gap:8px;color:var(--pri)}
+.big span{font:700 17px/1.2 var(--G);background:var(--pri);color:#fff;padding:7px 12px 5px;border-radius:8px}
+.big i{display:block;position:relative;width:100%;height:10px;background:currentColor;border-radius:3px}
+.big i::after{content:'';position:absolute;right:-8px;top:50%;transform:translateY(-50%);border-left:22px solid currentColor;border-top:16px solid transparent;border-bottom:16px solid transparent}
+.live{display:flex;align-items:center;gap:16px;justify-content:center;border-radius:14px;padding:16px 20px;background:var(--navy);color:#fff;font:700 22px/1.3 var(--G)}
+.live .ic{color:#fff}
+.adv{width:410px;flex:none;display:flex;flex-direction:column;gap:12px;border-radius:16px;padding:20px 22px;background:var(--panel);border:1px solid var(--line);justify-content:space-between}
+.adv .it{flex:1;display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);padding-top:10px}
+
+/* ---------- COMPONENT: 2x2 criteria around a hub (.crit .cr .hub) — examples/ S12 ---------- */
+.crit{display:grid;grid-template-columns:1fr 260px 1fr;grid-template-rows:1fr 1fr;gap:16px 0;position:relative}
+.cr{border:1.5px solid var(--line);border-radius:16px;padding:18px 22px;display:flex;flex-direction:column;gap:10px;background:#fff;position:relative;z-index:1}
+.cr .hd{display:flex;align-items:center;gap:12px}
+.cr .q{font:700 23px/1.42 var(--G);color:var(--ink);letter-spacing:-.4px}
+.cr .df{margin-top:auto;border-top:1px dashed var(--pri-line);padding-top:10px}
+.cr .df b{color:var(--pri)}
+.hub{grid-column:2;grid-row:1/3;align-self:center;justify-self:center;width:214px;height:214px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--pri-2),var(--pri) 55%,var(--navy));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:2;box-shadow:0 0 0 10px var(--soft)}
+.hub b{font:700 19px/1.4 var(--G)}
+.hub .ic{color:#fff;margin-bottom:8px}
+
+/* ---------- COMPONENT: sequence diagram (.sq > .ll lifeline heads + .lline + .msg) ---------- */
+.sq{position:relative;width:840px;flex:none;border:1px solid var(--line);border-radius:16px;background:var(--panel3)}
+.ll{position:absolute;top:16px;width:184px;height:64px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;background:#fff;border:1.5px solid var(--line);font:700 17px/1.25 var(--G);text-align:center;z-index:1}
+.ll .ic{color:var(--pri)}
+.ll.ch{background:var(--pri);color:#fff;border-color:var(--pri)}
+.ll.ch .ic{color:#fff}
+.lline{position:absolute;top:80px;bottom:52px;border-left:2px dashed var(--dash);transform:translateX(-1px)}
+.lline.ch{border-left-color:var(--pri-light)}
+.msg{position:absolute;height:46px;--c:var(--pri);color:var(--c)}
+.msg>i{position:absolute;left:0;right:0;bottom:8px;height:2.5px;background:currentColor}
+.msg.r>i::after{content:'';position:absolute;right:-2px;top:50%;transform:translateY(-50%);border-left:12px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.msg.l>i::after{content:'';position:absolute;left:-2px;top:50%;transform:translateY(-50%);border-right:12px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.msg.dash>i{background:repeating-linear-gradient(90deg,currentColor 0 7px,transparent 7px 12px)}
+.msg>span{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);white-space:nowrap;display:flex;align-items:center;gap:7px;font:600 16.5px/1.2 var(--P);color:var(--ink);background:var(--panel3);padding:1px 6px}
+.msg>span b{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--c);color:#fff;font:700 13px/1 var(--G);padding-top:1px}
+.msg.m{--c:var(--pri)} .msg.a{--c:var(--act)} .msg.d{--c:var(--slate)}
+.msg.m>span{color:var(--pri);font-weight:700}
+.sq .legend{position:absolute;left:24px;bottom:16px}
+.ov{flex:1;display:flex;flex-direction:column;gap:12px;border-radius:16px;padding:20px 22px;background:var(--soft);border:2px solid var(--pri)}
+.ov .k{font:700 16px/1 var(--G);color:var(--pri);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.ov .blk{flex:1;display:flex;flex-direction:column;justify-content:center;background:#fff;border-radius:10px;padding:12px 14px;border:1px solid var(--soft-bd)}
+
+/* ---------- COMPONENT: OK / FAIL rows (.sr .st .oc .alr) — examples/ S14 ---------- */
+.sr{display:grid;grid-template-columns:168px 200px 112px 176px 112px 200px 104px 1fr;align-items:center;border-radius:14px;padding:12px 16px;border:1px solid var(--line)}
+.sr .lb2{display:flex;flex-direction:column;gap:8px;padding-right:10px}
+.sr .lb2 .n{font:700 18px/1.3 var(--G)}
+.sr .lb2 .s{font:500 15px/1.3 var(--P);color:var(--slate)}
+.sr .ins{display:flex;flex-direction:column;gap:22px}
+.sr .ins .nd{min-height:52px;font-size:17px;padding:6px 10px}
+.sr.okr{background:var(--ok-bg);border-color:var(--ok-bd)}
+.sr.bad{background:var(--bad-bg);border-color:var(--bad-bd)}
+.st{display:flex;align-items:center;justify-content:center;gap:8px;min-height:62px;border-radius:10px;font:700 17.5px/1.3 var(--P);padding:8px 10px;text-align:center;color:#fff}
+.st.g{background:var(--ok)} .st.r{background:var(--bad)}
+.oc{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:62px;border-radius:10px;padding:8px 14px;font:700 17.5px/1.35 var(--P);border:1.5px solid}
+.oc.g{border-color:var(--ok);color:var(--ok-ink);background:#fff}
+.oc.r{border-color:var(--bad);color:var(--bad-ink);background:#fff}
+.alr{display:inline-flex;align-items:center;gap:6px;padding:5px 9px 4px;border-radius:6px;background:var(--bad);color:#fff;font:700 13.5px/1.1 var(--G);align-self:flex-start}
+.dm{flex:1;display:flex;gap:14px;align-items:flex-start;border-radius:14px;padding:16px 18px;border:1px solid var(--line);background:#fff}
+
+/* ---------- COMPONENT: branch (1 -> 2 outcomes) (.wl .br .rs) — examples/ S15 ---------- */
+.wl{align-self:center;width:600px;border-radius:16px;padding:20px 24px;background:var(--soft);border:2px solid var(--pri);display:flex;gap:16px;align-items:center}
+.br{position:relative;height:110px;display:grid;grid-template-columns:.8fr 1.2fr}
+.br::before{content:'';position:absolute;left:21%;right:30.5%;top:18px;border-top:2.5px solid var(--pri-light)}
+.br::after{content:'';position:absolute;left:50%;top:0;height:18px;border-left:2.5px solid var(--pri-light)}
+.br>div{display:flex;padding-top:18px}
+.rs{flex:1;border-radius:14px;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.rs ul.ls{gap:14px}
+.rs ul.ls li{font-size:22px}
+.rs .hd{display:flex;align-items:center;gap:12px;font:700 25px/1.3 var(--G);padding-bottom:14px;border-bottom:1px solid var(--line)}
+.rs.blk{background:var(--panel2);border:2px solid var(--sk2)}
+.rs.blk .hd{color:var(--slate)}
+.rs.ok{background:#fff;border:2px solid var(--pri)}
+.rs.ok .hd{color:var(--pri)}
+.rs ul.ls.g li::before{background:var(--muted)}
+.ft{width:440px;flex:none;display:flex;flex-direction:column;gap:12px}
+.ft .card{flex:1;display:flex;gap:14px;align-items:center}
+
+/* ---------- COMPONENT: comparison table (<table class="tb cmp">, td.h1 = recommended column) ---------- */
+.tb.cmp td{padding:10px 16px;font-size:18px;text-align:center}
+.tb.cmp td:first-child{text-align:left;white-space:nowrap}
+.tb.cmp th{text-align:center}
+.tb.cmp th:first-child{text-align:left}
+.tb.cmp td .v{display:block;font-weight:700;font-size:19px}
+.tb.cmp td .p{display:block;color:var(--slate);font-size:16.5px}
+.tb.cmp td.h1{background:var(--soft);border-left:3px solid var(--pri);border-right:3px solid var(--pri)}
+.tb.cmp td.h1 .v{color:var(--pri)}
+.tb.cmp th.h1{background:var(--pri);border-left:3px solid var(--pri);border-right:3px solid var(--pri)}
+.tb.cmp td.h2 .v{color:var(--proof)}
+.tb.cmp tr.fin td{border-top:2px solid var(--navy);border-bottom:0;padding:12px 16px}
+.tb.cmp tr.fin td.h1{border-bottom:3px solid var(--pri)}
+.tb.cmp tr.fin td:first-child{font:700 18px/1.3 var(--G);color:var(--navy)}
+.recm{display:flex;gap:18px;align-items:center;border-radius:14px;padding:16px 22px;background:var(--soft);border:2px solid var(--pri)}
+.recm .k{font:700 15px/1 var(--G);color:var(--pri);margin-bottom:8px}
+.recm .ic{color:var(--pri)}
+
+/* ---------- COMPONENT: UI wireframes (.win .wfb .kpi .skr .wf-*) — examples/ S17 ---------- */
+.win{border-radius:12px;border:1.5px solid var(--dash);background:#fff;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 6px 18px var(--shadow-sm)}
+.win .bar{flex:none;height:34px;display:flex;align-items:center;gap:6px;padding:0 12px;background:var(--panel2);border-bottom:1px solid var(--line)}
+.win .bar i{width:9px;height:9px;border-radius:50%;background:var(--sk2)}
+.win .bar span{margin-left:8px;font:700 14.5px/1 var(--G);color:var(--slate);padding-top:2px}
+.win .bar span em{font-style:normal;color:var(--pri);margin-right:6px}
+.win .cn2{flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:9px;justify-content:space-between}
+.wf-l{font:600 16px/1.3 var(--P);color:var(--ink)}
+.sk{height:8px;border-radius:4px;background:var(--sk)}
+.wf-bar{height:12px;border-radius:6px;background:var(--sk);overflow:hidden}
+.wf-bar i{display:block;height:100%;width:62%;background:var(--pri);opacity:.75}
+.wfb{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--panel3)}
+.kpi{flex:1;display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:7px;background:var(--panel2)}
+.sk2{height:14px;border-radius:4px;background:var(--sk2);width:80%}
+.skr{display:flex;align-items:center;gap:8px;padding:5px 0}
+.skr .dot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--sk2)}
+.skr .sp{flex:none;margin-left:auto;width:44px;height:16px;border-radius:5px;background:var(--sk)}
+.skr .sp.on{background:var(--pri);opacity:.8}
+.wf-btn{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:8px 14px 6px;border-radius:8px;background:var(--pri);color:#fff;font:700 15px/1 var(--G)}
+.wf-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:8px;background:var(--panel2);font:600 15.5px/1.25 var(--P)}
+.wf-st{flex:none;display:inline-flex;align-items:center;gap:4px;font:700 13.5px/1 var(--G);padding:5px 8px 3px;border-radius:5px}
+.wf-st.ok{background:var(--ok-soft);color:var(--ok-ink)}
+.wf-st.p{background:var(--soft);color:var(--pri)}
+.vbadge{display:inline-flex;align-items:center;gap:8px;padding:9px 16px 7px;border-radius:8px;background:var(--ok);color:#fff;font:700 17px/1 var(--G)}
+.stepc{width:420px;flex:none;display:flex;flex-direction:column;gap:12px;border-radius:16px;padding:20px;background:var(--panel);border:1px solid var(--line)}
+.stepc .it .t18{font-size:20px}
+.stepc .it{flex:1;display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;background:#fff;border:1px solid var(--line)}
+
+/* ---------- COMPONENT: request cards (.rq .ttlbar .safe) — examples/ S18 ---------- */
+.rq{flex:1;display:flex;flex-direction:column;border-radius:16px;border:2px solid var(--pri);background:#fff;overflow:hidden}
+.rq .hd{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--soft);border-bottom:1px solid var(--soft-bd)}
+.rq .hd .h3{font-size:21px}
+.rq .rw{flex:1;display:flex;gap:14px;align-items:center;padding:12px 20px;border-bottom:1px dashed var(--line)}
+.rq .rw:last-child{border-bottom:0}
+.rq .rw .k{flex:none;width:118px;display:flex;align-items:center;gap:8px;font:700 16px/1.2 var(--G);color:var(--pri)}
+.ttlbar{display:flex;align-items:center;justify-content:center;gap:12px;font:700 22px/1.3 var(--G);color:var(--navy)}
+.ttlbar::before,.ttlbar::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,transparent,var(--pri-line))}
+.ttlbar::after{background:linear-gradient(90deg,var(--pri-line),transparent)}
+.safe{display:flex;gap:16px;align-items:center;border-radius:14px;padding:14px 20px;background:var(--panel);border:1px solid var(--line)}
+
+/* ---------- COMPONENT: gantt (.gt > .gr rows, .gb bars, .dia milestone, .today line) ---------- */
+.gt{position:relative;border:1px solid var(--line);border-radius:14px;padding:10px 16px 12px;background:#fff}
+.gr{display:flex;align-items:center;min-height:38px}
+.gr .lab{width:330px;flex:none;font:600 17.5px/1.25 var(--P);padding-right:12px}
+.gr .trk{flex:1;position:relative;height:38px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(12.5% - 1px),var(--grid) calc(12.5% - 1px),var(--grid) 12.5%)}
+.gr.hd .trk{background:none;display:grid;grid-template-columns:repeat(8,1fr);height:auto}
+.gr.hd .trk span{text-align:center;font:700 15px/1.2 var(--G);color:var(--slate);padding:6px 0 4px}
+.gr.hd .trk span em{display:block;font:500 12px/1 var(--P);color:var(--muted);font-style:normal;margin-bottom:3px}
+.gr.sc{min-height:30px;border-top:1px solid var(--line);margin-top:4px}
+.gr.sc .lab{font:700 15px/1 var(--G);color:var(--pri);padding-top:6px}
+.gb{position:absolute;top:8px;height:22px;border-radius:6px;display:flex;align-items:center;padding:0 8px;font:700 12.5px/1 var(--G);color:#fff;white-space:nowrap}
+.gb.done{background:var(--pri)}
+.gb.act{background:repeating-linear-gradient(-45deg,var(--act) 0 8px,var(--act-2) 8px 14px)}
+.gb.plan{background:var(--soft);border:1.5px solid var(--pri-mid);color:var(--pri)}
+.gb.crit{background:var(--navy)}
+.dia{position:absolute;top:9px;width:20px;height:20px;transform:translateX(-50%) rotate(45deg);background:#fff;border:3px solid var(--navy)}
+.today{position:absolute;top:66px;bottom:34px;border-left:2.5px dashed var(--pri);z-index:2}
+.today span{position:absolute;top:4px;left:8px;white-space:nowrap;font:700 13px/1 var(--G);color:#fff;background:var(--pri);padding:5px 8px 3px;border-radius:5px}
+.mcs{display:flex;gap:12px}
+.mc{flex:1;border-radius:12px;padding:12px 14px;border:1px solid var(--line);background:#fff;display:flex;flex-direction:column;gap:6px}
+.mc .m{font:700 17px/1.2 var(--G);color:var(--pri)}
+.mc.hi{border:2px solid var(--navy);background:var(--soft)}
+.mc.hi .m{color:var(--navy)}
+
+/* ---------- COMPONENT: decision cards (.dc, .dc.z, .dc.n2) ---------- */
+.dc{flex:1;display:flex;flex-direction:column;border-radius:16px;border:2px solid var(--pri);background:#fff;overflow:hidden}
+.dc .hd{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;background:var(--pri);color:#fff}
+.dc .hd .n{font:700 15px/1 var(--G);letter-spacing:.6px;opacity:.85}
+.dc .hd .no{font:700 40px/1 var(--G)}
+.dc .tt{padding:20px 22px 0;font:700 25px/1.35 var(--G);letter-spacing:-.4px;color:var(--ink)}
+.dc .ag{flex:1;margin:16px 22px 20px;padding:16px 18px;border-radius:12px;background:var(--soft);display:flex;flex-direction:column;gap:14px;justify-content:center}
+.dc .ag .k{font:700 15px/1 var(--G);color:var(--pri);display:flex;align-items:center;gap:8px}
+.dc .ag p{font:500 23px/1.55 var(--P)}
+.dc.z{border-color:var(--proof)} .dc.z .hd{background:var(--proof)} .dc.z .ag{background:var(--proofsoft)} .dc.z .ag .k{color:var(--proof)}
+.dc.n2{border-color:var(--navy)} .dc.n2 .hd{background:var(--navy)}
+.mean{display:flex;gap:16px;align-items:center;border-radius:14px;padding:14px 20px;background:var(--panel);border:1px solid var(--line)}
+
+/* ---------- COMPONENT: effect cards (.ef) — examples/ S21 ---------- */
+.ef{flex:1;display:flex;flex-direction:column;border-radius:16px;border:1.5px solid var(--line);background:#fff;padding:24px 26px;gap:18px}
+.ef .hd{display:flex;align-items:center;gap:14px}
+.ef .hd .icb{width:72px;height:72px}
+.ef .hd .h3{font-size:26px}
+.ef .kp{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:22px 0;border-top:2px solid var(--pri);border-bottom:1px solid var(--line)}
+.ef .kp div{display:flex;align-items:center;gap:10px;font:700 26px/1.35 var(--G);color:var(--pri);letter-spacing:-.4px}
+.ef .kp .ic{color:var(--pri)}
+.ef .ct{display:flex;flex-direction:column;gap:8px;padding:18px 18px;border-radius:12px;background:var(--panel2);min-height:150px}
+.ef .ct p{font-size:20.5px}
+.ef.hi .ct{background:#fff}
+.ef .ct .k{font:700 15px/1 var(--G);color:var(--muted)}
+.ef.z .kp{border-top-color:var(--proof)} .ef.z .kp div,.ef.z .kp .ic{color:var(--proof)}
+.ef.hi{background:var(--soft);border:2px solid var(--pri)}
+
+/* ---------- COMPONENT: Q&A closing slide (.qa) ---------- */
+.qa{background:linear-gradient(180deg,#FFFFFF 0%,var(--cover-mid) 60%,var(--soft) 100%)}
+.qa .ctr{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding-bottom:10px;text-align:center;position:relative}
+.qa .qbig{font:700 104px/1 var(--G);letter-spacing:-2px;background:linear-gradient(90deg,var(--pri),var(--proof));-webkit-background-clip:text;background-clip:text;color:transparent;padding-top:6px}
+.qa .gl{width:120px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--pri),var(--proof))}
+.qa .msg2{font:700 32px/1.4 var(--G);letter-spacing:-.6px;color:var(--ink)}
+.qcard{width:1040px;border-radius:18px;background:#fff;border:1px solid var(--line);box-shadow:0 14px 40px var(--shadow-sm);padding:30px 36px;display:grid;grid-template-columns:1fr 1.25fr;gap:24px;text-align:left}
+.qcard .rw{display:flex;gap:14px;align-items:flex-start;padding:8px 0}
+.qcard .rw .k{font:700 15px/1 var(--G);color:var(--pri);margin-bottom:8px}
+.qcard ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.qcard li{display:flex;align-items:center;gap:10px;font:600 19.5px/1.35 var(--P);padding:11px 14px;border-radius:9px;background:var(--panel2)}
+.qcard li .ic{color:var(--pri)}
+.deco2{flex:1;height:2px;background:linear-gradient(90deg,transparent,var(--pri))}
+.deco2.r{background:linear-gradient(90deg,var(--proof),transparent)}
+.endbar{height:6px;margin:0 -56px -22px;background:linear-gradient(90deg,var(--navy),var(--pri) 45%,var(--proof))}
+</style>
+</head>
+<body>
+<!-- ICON SPRITE: 사용법 <svg class="ic s28"><use href="#i-check"/></svg>. 새 아이콘은 같은 형식(24x24, stroke=currentColor, fill=none)의 <symbol>로 추가. 이모지 금지. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="i-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5h18M4 9.5l8-6 8 6"/><path d="M5.5 9.5v8M10 9.5v8M14 9.5v8M18.5 9.5v8M3 20.5h18"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7.5V5.5A1.5 1.5 0 0 0 17.5 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h13.5a1.5 1.5 0 0 0 1.5-1.5V16"/><path d="M21 9.5h-5a2.5 2.5 0 0 0 0 5h5z"/><path d="M3 7.5h16"/></symbol>
+<symbol id="i-gov" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.2"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M10.5 21v-2.5h3V21"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+<symbol id="i-contract" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M10.5 12l-2 2.5 2 2.5M13.5 12l2 2.5-2 2.5"/></symbol>
+<symbol id="i-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 8.5l1.8 7 2.2-5.5 2.2 5.5 1.8-7M7.5 11.5h9"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v5.5c0 4.4-3.1 7.8-7.5 9.5-4.4-1.7-7.5-5.1-7.5-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.3-4.4"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-checkc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.5v2"/></symbol>
+<symbol id="i-eyeoff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 6.1A9.8 9.8 0 0 1 12 6c5 0 8.5 4 9.5 6-.4.9-1.3 2.2-2.6 3.4M6.6 7.6C4.6 8.9 3.2 10.7 2.5 12c1 2 4.5 6 9.5 6 1.7 0 3.2-.5 4.5-1.2"/><path d="M9.9 10a3 3 0 0 0 4.1 4.1"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M7 16v-4M12 16V8M17 16V5"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c1.8.9 3 2.9 3 5.7"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c0-4 3.4-7 7.5-7s7.5 3 7.5 7"/></symbol>
+<symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l2-5h14l2 5"/><path d="M3 9h18v1a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7M10 20v-4h4v4"/></symbol>
+<symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></symbol>
+<symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4.5"/><path d="M11.2 11.8L20 3M16 7l2.5 2.5M13.8 9.2l2 2"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5L2.5 20h19z"/><path d="M12 10v4.5M12 17.3v.2"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7M14 8.5v7"/></symbol>
+<symbol id="i-ban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.7 5.7l12.6 12.6"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2.5L4.5 14H11l-1 7.5L18.5 10H12z"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v17M7.5 20.5h9M5 7h14"/><path d="M5 7l-2.8 6a2.8 2.8 0 0 0 5.6 0zM19 7l-2.8 6a2.8 2.8 0 0 0 5.6 0z"/></symbol>
+<symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l9 4.8-9 4.8-9-4.8z"/><path d="M3 12.5l9 4.8 9-4.8M3 16.5l9 4.8 9-4.8"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V3.5M5 4h12l-2.5 4.5L17 13H5"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+<symbol id="i-pointer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5l12 7-5.2 1.4-2.6 5.6z"/><path d="M12.8 11.9l5 6"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h16v11.5H9.5L4 20.5z"/><path d="M8 9h8M8 12.5h5"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l7 7 4-4 7 7"/><path d="M15 16h6v-6"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-5L16 4l4 4L9 19z"/><path d="M13.5 6.5l4 4"/></symbol>
+<symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="16" height="6.5" rx="1.5"/><path d="M8 7.2h.01M8 16.8h.01"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3z"/></symbol>
+<symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/></symbol>
+<symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7.5" ry="3"/><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></symbol>
+<symbol id="i-q" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17v.2"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6l8.5 7 8.5-7"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-team" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7.5" r="3"/><circle cx="5" cy="10" r="2.3"/><circle cx="19" cy="10" r="2.3"/><path d="M7 20c0-2.8 2.2-5 5-5s5 2.2 5 5M1.8 18.5c.3-2 1.6-3.4 3.2-3.4M22.2 18.5c-.3-2-1.6-3.4-3.2-3.4"/></symbol>
+</defs>
+</svg>
+<div class="deck">
+
+<!-- ============ SAMPLE 01 · COVER ============ -->
+<section class="slide cover" id="s01" data-name="cover">
+  <img class="img" data-bleed src="assets/cover.jpg" alt="">
+  <img class="cv-logo" src="assets/logo.svg" alt="LOGO">
+  <div class="txt">
+    <div class="cv-org">발주기관 또는 보고 대상</div>
+    <h1 class="cv-t">발표 제목을 여기에<br>두 줄까지 씁니다</h1>
+    <div class="cv-s">부제를 여기에 씁니다<br>보고 목적이나 범위를 한 줄로</div>
+    <div class="cv-line"></div>
+    <div class="cv-p">기간 또는 보고일자 | 문서 버전</div>
+    <div class="cv-c">작성 기관명</div>
+  </div>
+  <div class="grad"></div>
+</section>
+
+<!-- ============ SAMPLE 02 · HEADLINE + MILESTONE FLOW (labeled arrows) + 2 CARDS ============ -->
+<section class="slide" id="s02" data-name="flow-steps">
+  <div class="top"><div class="sec"><span class="pt">PART I</span>섹션 이름<span class="bar"></span><span class="ttl">슬라이드 소제목</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">02 <span>/ 11</span></span></div></div>
+  <h2 class="hl">헤드라인을 여기에 씁니다. <em>강조할 구간</em>은 주 색으로 표시합니다.</h2>
+  <div class="bd">
+    <div class="ms grow" style="flex-direction:row">
+      <div class="stp"><div class="tp"><span class="no">01</span></div><div class="nm">1단계 이름</div><ul class="ls t20"><li>1단계 주요 내용</li><li>1단계 산출물</li></ul><div class="when"><svg class="ic s24"><use href="#i-cal"/></svg>(시점 또는 기간)</div></div>
+      <div class="ar c-d"><span>전달되는 것</span><i></i></div>
+      <div class="stp cur"><div class="tp"><span class="no">02</span><span class="pill">현 단계</span></div><div class="nm">2단계 이름</div><ul class="ls t20"><li><b>현재 단계의 핵심 내용</b></li><li><b>이번 보고의 결정 사항</b></li><li>보조 내용</li></ul><div class="when"><svg class="ic s24"><use href="#i-cal"/></svg>(시점 또는 기간)</div></div>
+      <div class="ar c-m"><span>전달되는 것</span><i></i></div>
+      <div class="stp nx"><div class="tp"><span class="no">03</span></div><div class="nm">3단계 이름</div><ul class="ls z t20"><li><b>다음 단계의 핵심 내용</b></li><li>다음 단계 검증 항목</li><li>다음 단계 보조 내용</li></ul><div class="when"><svg class="ic s24"><use href="#i-cal"/></svg>(시점 또는 기간)</div></div>
+      <div class="ar c-d"><span>전달되는 것</span><i></i></div>
+      <div class="stp"><div class="tp"><span class="no">04</span></div><div class="nm">4단계 이름</div><ul class="ls t20"><li>마지막 단계 내용</li><li>최종 산출물</li></ul><div class="when"><svg class="ic s24"><use href="#i-cal"/></svg>(시점 또는 기간)</div></div>
+    </div>
+    <div class="row">
+      <div class="card s f1" style="display:flex;gap:18px;align-items:flex-start"><div class="icb w"><svg class="ic"><use href="#i-doc"/></svg></div>
+        <div class="col" style="gap:10px"><div class="h3">1. 카드 제목</div>
+        <ul class="ls t20"><li>초안의 본문 문장을 그대로 옮겨 적습니다.</li><li>두 번째 본문 문장을 그대로 옮겨 적습니다.</li></ul></div></div>
+      <div class="card s f1" style="display:flex;gap:18px;align-items:flex-start"><div class="icb w"><svg class="ic"><use href="#i-target"/></svg></div>
+        <div class="col" style="gap:10px"><div class="h3">2. 카드 제목</div>
+        <ul class="ls t20"><li>초안의 본문 문장을 그대로 옮겨 적습니다.</li><li>강조가 필요한 부분은 <span class="em">이렇게 주 색으로 강조</span>합니다.</li></ul></div></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>핵심 요약 문장을 한 줄로 씁니다. 초안의 Takeaway 문장을 그대로 사용합니다.</p></div>
+</section>
+
+<!-- ============ SAMPLE 03 · TABLE WITH PROGRESS BARS ============ -->
+<!-- 막대 폭(style="width:NN%")과 숫자는 반드시 초안의 수치와 같게. 아래 수치는 자리표시용 예시. -->
+<section class="slide" id="s03" data-name="table-bars">
+  <div class="top"><div class="sec"><span class="pt">PART I</span>섹션 이름<span class="bar"></span><span class="ttl">슬라이드 소제목</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">03 <span>/ 11</span></span></div></div>
+  <h2 class="hl">표 슬라이드 헤드라인을 여기에 씁니다. <em>핵심 수치</em>를 강조합니다.</h2>
+  <div class="bd" style="gap:12px">
+    <div class="grow">
+      <div class="lg2"><span><i style="background:var(--pri)"></i>범례 항목 1</span><span><i style="background:repeating-linear-gradient(-45deg,var(--act) 0 5px,var(--act-2) 5px 9px)"></i>범례 항목 2</span></div>
+      <table class="tb prog">
+        <colgroup><col style="width:268px"><col style="width:84px"><col style="width:250px"><col><col style="width:330px"></colgroup>
+        <tr><th>항목 묶음</th><th class="c">개수</th><th>진척도</th><th>현재 확보 범위</th><th>잔여 과제</th></tr>
+        <tr><td>① 항목 이름</td><td class="c">N개</td><td><div class="pg"><div class="tr"><i style="width:50%"></i></div><span class="v">50%</span></div></td><td>현재까지 확보한 범위를 적습니다</td><td>남은 과제를 적습니다</td></tr>
+        <tr><td>② 항목 이름</td><td class="c">N개</td><td><div class="pg"><div class="tr"><i style="width:40%"></i></div><span class="v">40%</span></div></td><td>현재까지 확보한 범위를 적습니다</td><td>남은 과제를 적습니다</td></tr>
+        <tr><td>③ 항목 이름</td><td class="c">N개</td><td><div class="pg"><div class="tr"><i style="width:60%"></i></div><span class="v">60%</span></div></td><td>현재까지 확보한 범위를 적습니다</td><td>남은 과제를 적습니다</td></tr>
+        <tr class="dv"><td>④ 다른 성격 항목</td><td class="c">N개</td><td><div class="pg dev"><div class="tr"><i style="width:80%"></i></div><span class="v">80%<small>(구분)</small></span></div></td><td>현재까지 확보한 범위를 적습니다</td><td>남은 과제를 적습니다</td></tr>
+        <tr class="tt"><td>전체 종합</td><td class="c">N개</td><td><div class="pg tot"><div class="tr"><i style="width:55%"></i></div><span class="v">55%<small>(종합)</small></span></div></td><td>종합 확보 범위를 적습니다</td><td>종합 잔여 과제를 적습니다</td></tr>
+      </table>
+    </div>
+    <div class="row">
+      <div class="card f1" style="display:flex;gap:16px;align-items:center;border-left:5px solid var(--act)"><div class="icb"><svg class="ic"><use href="#i-bolt"/></svg></div>
+        <p class="t20"><b>시사점 1</b>: 표에서 읽어야 할 첫 번째 포인트를 <span class="em">한 문장으로</span> 적습니다.</p></div>
+      <div class="card f1" style="display:flex;gap:16px;align-items:center;border-left:5px solid var(--pri)"><div class="icb"><svg class="ic"><use href="#i-target"/></svg></div>
+        <p class="t20"><b>시사점 2</b>: 표에서 읽어야 할 두 번째 포인트를 한 문장으로 적습니다.</p></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>핵심 요약 문장을 한 줄로 씁니다.</p></div>
+</section>
+
+<!-- ============ SAMPLE 04 · AS-IS / TO-BE LANES (flow chain, every arrow labeled) ============ -->
+<section class="slide" id="s04" data-name="asis-tobe-flow">
+  <div class="top"><div class="sec"><span class="pt">PART II</span>섹션 이름<span class="bar"></span><span class="ttl">슬라이드 소제목</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">04 <span>/ 11</span></span></div></div>
+  <h2 class="hl">현재 방식과 개선 방식을 비교하는 헤드라인입니다. <em>개선 포인트</em>를 강조합니다.</h2>
+  <div class="bd" style="gap:12px">
+    <div class="lane old grow" style="flex-direction:row">
+      <div class="lt"><span class="k">AS-IS</span><span class="n">현재 방식 이름</span><span class="s">현재 방식의 특징</span></div>
+      <div class="rt">
+        <div class="flw">
+          <div class="nd" style="width:138px"><svg class="ic s28"><use href="#i-user"/></svg>주체 A</div>
+          <div class="ar c-d f1"><span>전달 1</span><i></i></div>
+          <div class="nd" style="width:138px"><svg class="ic s28"><use href="#i-server"/></svg>주체 B</div>
+          <div class="ar c-d f1"><span>전달 2</span><i></i></div>
+          <div class="nd" style="width:138px"><svg class="ic s28"><use href="#i-card"/></svg>주체 C</div>
+          <div class="ar c-d f1"><span>전달 3</span><i></i></div>
+          <div class="nd" style="width:150px"><svg class="ic s28"><use href="#i-doc"/></svg>주체 D</div>
+          <div class="ar c-d f1"><span>전달 4</span><i></i></div>
+          <div class="nd" style="width:138px"><svg class="ic s28"><use href="#i-store"/></svg>주체 E</div>
+        </div>
+        <div class="chips">
+          <div class="chip"><span class="k">지표 1</span><span>현재 방식의 지표 1 값</span></div>
+          <div class="chip"><span class="k">지표 2</span><span>현재 방식의 지표 2 값</span></div>
+          <div class="chip"><span class="k">한계</span><span>현재 방식의 한계를 한 줄로 적습니다</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="lane new grow" style="flex-direction:row">
+      <div class="lt"><span class="k">TO-BE</span><span class="n">개선 방식 이름</span><span class="s">개선 방식의 특징</span></div>
+      <div class="rt">
+        <div class="flw">
+          <div class="nd p" style="width:150px"><svg class="ic s28"><use href="#i-user"/></svg>주체 A</div>
+          <div class="ar c-m f1"><span>전달 1</span><i></i></div>
+          <div class="nd dk" style="width:330px"><svg class="ic s28"><use href="#i-contract"/></svg>핵심 처리 단계 (설명)</div>
+          <div class="ar c-m f1"><span>전달 2</span><i></i></div>
+          <div class="nd p" style="width:250px"><svg class="ic s28"><use href="#i-store"/></svg>결과를 받는 주체</div>
+        </div>
+        <div class="chips">
+          <div class="chip"><span class="k">지표 1</span><span><b>개선 값</b> (부연)</span></div>
+          <div class="chip"><span class="k">지표 2</span><span><b>개선 값</b> (부연)</span></div>
+          <div class="chip"><span class="k">장점</span><span>개선 방식의 장점을 한 줄로 적습니다</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="kick" style="margin-bottom:10px">핵심 요인 3가지</div>
+      <div class="row" style="gap:14px">
+        <div class="card f1 bn"><span class="num sm">1</span><p class="t18"><b>요인 1</b>: 첫 번째 요인을 초안 문장 그대로 적습니다.</p></div>
+        <div class="card f1 bn"><span class="num sm">2</span><p class="t18"><b>요인 2</b>: 두 번째 요인을 초안 문장 그대로 적습니다.</p></div>
+        <div class="card f1 bn"><span class="num sm">3</span><p class="t18"><b>요인 3</b>: 세 번째 요인을 초안 문장 그대로 적습니다.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>핵심 요약 문장을 한 줄로 씁니다.</p></div>
+</section>
+
+<!-- ============ SAMPLE 05 · OPTION CARDS (A / B recommended / C) ============ -->
+<section class="slide" id="s05" data-name="option-cards">
+  <div class="top"><div class="sec"><span class="pt">PART II</span>섹션 이름<span class="bar"></span><span class="ttl">슬라이드 소제목</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">05 <span>/ 11</span></span></div></div>
+  <h2 class="hl">세 가지 대안을 비교하고, <em>권고안 B가 가장 현실적</em>임을 보여주는 헤드라인입니다.</h2>
+  <div class="bd">
+    <div class="row" style="flex:1;gap:16px">
+      <div class="mdl">
+        <div><div class="hd"><span class="pill g">대안 A</span></div><div class="nm">대안 A 이름</div></div>
+        <div class="fl">
+          <div class="nd"><svg class="ic s28"><use href="#i-gov"/></svg>대안 A 주체</div>
+          <div class="va c-d"><i></i><span>무엇이 이동</span></div>
+          <div class="nd"><svg class="ic s28"><use href="#i-server"/></svg>대안 A 결과</div>
+        </div>
+        <div class="res"><div class="k"><svg class="ic s24"><use href="#i-alert"/></svg>리스크</div><p class="t18">대안 A의 리스크 1<br>대안 A의 리스크 2</p></div>
+        <div class="vd"><svg class="ic s28 c-d"><use href="#i-x"/></svg><div><div class="k">판정</div><p class="t18">대안 A에 대한 판정 문장.</p></div></div>
+      </div>
+      <div class="mdl rec">
+        <div><div class="hd"><span class="pill">대안 B</span><span class="pill o"><svg class="ic s24" style="width:18px;height:18px"><use href="#i-check"/></svg>추천</span></div><div class="nm">대안 B 이름</div></div>
+        <div class="fl">
+          <div class="nd p"><svg class="ic s28"><use href="#i-gov"/></svg>대안 B 주체 (역할)</div>
+          <div class="va bi c-m"><i></i><span>무엇이 오가는지</span></div>
+          <div class="nd p"><svg class="ic s28"><use href="#i-bank"/></svg>대안 B 파트너 (역할)</div>
+        </div>
+        <div class="res"><div class="k"><svg class="ic s24"><use href="#i-shield"/></svg>장점</div><p class="t18">대안 B의 장점 1<br>대안 B의 장점 2</p></div>
+        <div class="vd"><svg class="ic s28 c-m"><use href="#i-checkc"/></svg><div><div class="k">판정</div><p class="t18"><span class="em">우선 추진 권고</span>. 대안 B에 대한 판정 문장.</p></div></div>
+      </div>
+      <div class="mdl">
+        <div><div class="hd"><span class="pill g">대안 C</span></div><div class="nm">대안 C 이름</div></div>
+        <div class="fl">
+          <div class="nd"><svg class="ic s28"><use href="#i-users"/></svg>대안 C 주체</div>
+          <div class="va c-d"><i></i><span>무엇이 이동</span></div>
+          <div class="nd"><svg class="ic s28"><use href="#i-cube"/></svg>대안 C 결과</div>
+        </div>
+        <div class="res"><div class="k"><svg class="ic s24"><use href="#i-layers"/></svg>장점 · 단점</div><p class="t18"><b>장점</b>: 대안 C의 장점<br><b>단점</b>: 대안 C의 단점</p></div>
+        <div class="vd"><svg class="ic s28 c-d"><use href="#i-swap"/></svg><div><div class="k">판정</div><p class="t18">대안 C에 대한 판정 문장.</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>핵심 요약 문장을 한 줄로 씁니다.</p></div>
+</section>
+
+<!-- ============ SAMPLE 06 · 3-LAYER STACK (layers + side descriptions + labeled connectors) ============ -->
+<section class="slide" id="s06" data-name="layer-stack">
+  <div class="top"><div class="sec"><span class="pt">PART III</span>섹션 이름<span class="bar"></span><span class="ttl">슬라이드 소제목</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">06 <span>/ 11</span></span></div></div>
+  <h2 class="hl">구조는 <em>하위 계층, 중간 계층, 상위 계층</em>의 3단 구조로 설계합니다.</h2>
+  <div class="bd">
+    <div class="arch grow" style="display:grid;grid-template-rows:1fr auto 1fr auto 1fr">
+      <div class="lyr l3"><div class="hd"><span class="pill g">Layer 3</span><span class="n">상위 계층 이름</span><span class="e">(English Name)</span></div>
+        <div class="mods"><div class="mod"><svg class="ic s28"><use href="#i-monitor"/></svg>상위 모듈 1</div><div class="mod"><svg class="ic s28"><use href="#i-store"/></svg>상위 모듈 2</div><div class="mod"><svg class="ic s28"><use href="#i-phone"/></svg>상위 모듈 3</div></div></div>
+      <div class="ldesc"><div><div class="k">상위 계층</div><p class="t19">상위 계층이 하는 일을 한두 문장으로 설명합니다.</p></div></div>
+      <div class="cn"><div class="va bi c-a"><i></i><span>계층 간 연동 방식</span></div></div><div></div>
+      <div class="lyr l2"><div class="hd"><span class="pill">Layer 2</span><span class="n">중간 계층 이름</span><span class="e">(English Name)</span></div>
+        <div class="mods"><div class="mod"><svg class="ic s28"><use href="#i-coin"/></svg>중간 모듈 1</div><div class="mod"><svg class="ic s28"><use href="#i-pen"/></svg>중간 모듈 2</div><div class="mod"><svg class="ic s28"><use href="#i-pause"/></svg>중간 모듈 3</div></div></div>
+      <div class="ldesc" style="border-color:var(--pri)"><div><div class="k">중간 계층</div><p class="t19">중간 계층이 하는 일을 한두 문장으로 설명합니다.</p></div></div>
+      <div class="cn"><div class="va bi c-z"><i></i><span>계층 간 연동 방식</span></div></div><div></div>
+      <div class="lyr l1"><div class="hd"><span class="pill z">Layer 1</span><span class="n">하위 계층 이름</span><span class="e">(English Name)</span></div>
+        <div class="mods"><div class="mod"><svg class="ic s28"><use href="#i-bank"/></svg>하위 모듈 1 (설명)</div><div class="ar bi c-z" style="width:118px"><span>오가는 것</span><i></i></div><div class="mod" style="border-color:var(--proof)"><svg class="ic s28"><use href="#i-key"/></svg>하위 모듈 2 (설명)</div></div></div>
+      <div class="ldesc" style="border-color:var(--proof)"><div><div class="k" style="color:var(--proof)">하위 계층</div><p class="t19">하위 계층이 하는 일을 한두 문장으로 설명합니다.</p></div></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>핵심 요약 문장을 한 줄로 씁니다.</p></div>
+</section>
+
+<!-- ============ SAMPLE 07 · SEQUENCE DIAGRAM + OVERVIEW PANEL ============ -->
+<!-- 생명선 x좌표(left)는 .ll과 .lline이 같아야 함. 메시지 .msg: left=시작 x, width=끝 x - 시작 x, top=58px 간격. .r 오른쪽 / .l 왼쪽 화살표. -->
+<section class="slide" id="s07" data-name="sequence">
+  <div class="top"><div class="sec"><span class="pt">PART III</span>섹션 이름<span class="bar"></span><span class="ttl">슬라이드 소제목</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">07 <span>/ 11</span></span></div></div>
+  <h2 class="hl">주체 사이의 처리 순서를 보여주는 헤드라인입니다. <em>자동 처리 구간</em>을 강조합니다.</h2>
+  <div class="bd">
+    <div class="row grow" style="flex-direction:row;gap:18px">
+      <div class="sq">
+        <div class="ll" style="left:110px"><svg class="ic s28"><use href="#i-gov"/></svg>주체 A</div>
+        <div class="ll" style="left:316px"><svg class="ic s28"><use href="#i-users"/></svg>주체 B</div>
+        <div class="ll" style="left:522px"><svg class="ic s28"><use href="#i-doc"/></svg>주체 C</div>
+        <div class="ll ch" style="left:728px"><svg class="ic s28"><use href="#i-contract"/></svg>시스템<br>(자동 처리)</div>
+        <div class="lline" style="left:110px"></div><div class="lline" style="left:316px"></div><div class="lline" style="left:522px"></div><div class="lline ch" style="left:728px"></div>
+        <div class="msg r m" style="left:110px;width:618px;top:96px"><span><b>1</b>초기 설정 및 조건 등록</span><i></i></div>
+        <div class="msg l d dash" style="left:110px;width:412px;top:154px"><span><b>2</b>1차 자료 제출</span><i></i></div>
+        <div class="msg r a" style="left:110px;width:618px;top:212px"><span><b>3</b>1차 승인</span><i></i></div>
+        <div class="msg l m" style="left:522px;width:206px;top:270px"><span><b>4</b>1차 자동 처리</span><i></i></div>
+        <div class="msg l d dash" style="left:110px;width:412px;top:328px"><span><b>5</b>최종 자료 제출</span><i></i></div>
+        <div class="msg r a" style="left:110px;width:618px;top:386px"><span><b>6</b>최종 승인</span><i></i></div>
+        <div class="msg l m" style="left:522px;width:206px;top:444px"><span><b>7</b>최종 자동 처리</span><i></i></div>
+        <div class="legend"><span class="c-m"><i></i>자산·대금 이동</span><span class="c-a"><i></i>승인</span><span class="c-d"><i style="background:repeating-linear-gradient(90deg,currentColor 0 5px,transparent 5px 9px)"></i>자료 제출</span></div>
+      </div>
+      <div class="ov">
+        <div style="display:flex;justify-content:space-between;align-items:center"><span class="kick">개요 패널 제목</span><span class="pill">배지</span></div>
+        <div class="blk"><div class="k"><svg class="ic s24"><use href="#i-flag"/></svg>대상</div><p class="t18">대상 사업이나 범위를 한 문장으로 적습니다.</p></div>
+        <div class="blk"><div class="k"><svg class="ic s24"><use href="#i-team"/></svg>참여 주체</div><p class="t18">주체 A ↔ 주체 B ↔ 주체 C ↔ 시스템.</p></div>
+        <div class="blk f1"><div class="k"><svg class="ic s24"><use href="#i-monitor"/></svg>핵심 내용</div>
+          <div class="col" style="gap:8px"><div style="display:flex;gap:10px"><span class="num sm" style="width:24px;height:24px;font-size:13px">1</span><p class="t18">첫 번째 핵심 내용을 초안 문장 그대로 적습니다.</p></div>
+          <div style="display:flex;gap:10px"><span class="num sm" style="width:24px;height:24px;font-size:13px">2</span><p class="t18">두 번째 핵심 내용을 초안 문장 그대로 적습니다.</p></div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>핵심 요약 문장을 한 줄로 씁니다.</p></div>
+</section>
+
+<!-- ============ SAMPLE 08 · COMPARISON TABLE (recommended column) + RECOMMENDATION BAR ============ -->
+<section class="slide" id="s08" data-name="comparison-table">
+  <div class="top"><div class="sec"><span class="pt">PART III</span>섹션 이름<span class="bar"></span><span class="ttl">슬라이드 소제목</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">08 <span>/ 11</span></span></div></div>
+  <h2 class="hl"><em>안 1을 기본안</em>으로 하고, <em class="z">안 2를 결합</em>할 것을 제안합니다.</h2>
+  <div class="bd" style="gap:12px">
+    <div class="grow"><table class="tb cmp">
+      <colgroup><col style="width:230px"><col><col><col></colgroup>
+      <tr><th>평가 지표</th><th class="h1">[안 1] 안 이름</th><th>[안 2] 안 이름</th><th>[안 3] 안 이름</th></tr>
+      <tr><td>평가 지표 1</td><td class="h1"><span class="v">매우 높음</span><span class="p">(근거)</span></td><td class="h2"><span class="v">높음</span><span class="p">(근거)</span></td><td><span class="v" style="font-weight:600">보통</span><span class="p">(근거)</span></td></tr>
+      <tr><td>평가 지표 2</td><td class="h1"><span class="v">값</span><span class="p">(근거)</span></td><td class="h2"><span class="v">값</span><span class="p">(근거)</span></td><td><span class="v" style="font-weight:600">값</span><span class="p">(근거)</span></td></tr>
+      <tr><td>평가 지표 3</td><td class="h1"><span class="v">최상</span><span class="p">(근거)</span></td><td class="h2"><span class="v">최상</span><span class="p">(근거)</span></td><td><span class="v" style="font-weight:600">보통</span><span class="p">(근거)</span></td></tr>
+      <tr><td>평가 지표 4</td><td class="h1"><span class="v">없음</span><span class="p">(근거)</span></td><td class="h2"><span class="v">없음</span><span class="p">(근거)</span></td><td><span class="v" style="font-weight:600">일부 존재</span><span class="p">(근거)</span></td></tr>
+      <tr class="fin"><td>최종 추천도</td><td class="h1"><span class="pill" style="height:36px;font-size:16px">1순위 (기본안)</span></td><td><span class="pill z" style="height:36px;font-size:16px">결합 추천</span></td><td><span class="pill g" style="height:36px;font-size:16px">후순위</span></td></tr>
+    </table></div>
+    <div class="recm"><svg class="ic s48"><use href="#i-layers"/></svg>
+      <div><div class="k">권고안</div><p class="t19"><b>권고안 이름</b>: <span class="em">[안 1]을 기본</span>으로 하고, 그 뒤에서 <span class="em">[안 2]가 함께 작동</span>하는 구성을 제안합니다. 권고 이유를 이어서 한 문장으로 적습니다.</p></div></div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>핵심 요약 문장을 한 줄로 씁니다.</p></div>
+</section>
+
+<!-- ============ SAMPLE 09 · GANTT ROADMAP + MILESTONE CARDS ============ -->
+<!-- 8칸(열) 기준: 1칸 = 12.5%. 막대 left/width는 칸 수 x 12.5%. .today left 식의 마지막 계수(0.4375)도 같은 비율. -->
+<section class="slide" id="s09" data-name="gantt">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>섹션 이름<span class="bar"></span><span class="ttl">슬라이드 소제목</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">09 <span>/ 11</span></span></div></div>
+  <h2 class="hl">일정 헤드라인을 여기에 씁니다. <em>핵심 마일스톤</em>을 강조합니다.</h2>
+  <div class="bd" style="gap:12px">
+    <div class="gt grow" style="justify-content:space-between">
+      <div class="gr hd"><div class="lab" style="font:700 15px/1.2 var(--G);color:var(--ink)">공정표 제목</div><div class="trk"><span><em>연도</em>M1</span><span><em>&nbsp;</em>M2</span><span><em>&nbsp;</em>M3</span><span><em>&nbsp;</em>M4</span><span><em>&nbsp;</em>M5</span><span><em>&nbsp;</em>M6</span><span><em>&nbsp;</em>M7</span><span><em>&nbsp;</em>M8</span></div></div>
+      <div class="gr sc"><div class="lab">완료 구간</div></div>
+      <div class="gr"><div class="lab">작업 1</div><div class="trk"><div class="gb done" style="left:0;width:43.75%">완료</div></div></div>
+      <div class="gr"><div class="lab">작업 2</div><div class="trk"><div class="gb done" style="left:12.5%;width:31.25%">완료</div></div></div>
+      <div class="gr sc"><div class="lab">후속 구간</div></div>
+      <div class="gr"><div class="lab">작업 3</div><div class="trk"><div class="gb act" style="left:43.75%;width:18.75%">진행</div></div></div>
+      <div class="gr"><div class="lab" style="color:var(--navy);font-weight:700">[마일스톤 1] 이름</div><div class="trk"><div class="gb crit" style="left:50%;width:25%"></div><div class="dia" style="left:68.75%"></div></div></div>
+      <div class="gr"><div class="lab">작업 4</div><div class="trk"><div class="gb plan" style="left:62.5%;width:25%"></div></div></div>
+      <div class="gr"><div class="lab">작업 5</div><div class="trk"><div class="gb plan" style="left:75%;width:25%"></div></div></div>
+      <div class="gr"><div class="lab" style="color:var(--navy);font-weight:700">[마일스톤 2] 이름</div><div class="trk"><div class="gb crit" style="left:87.5%;width:10%"></div><div class="dia" style="left:97.5%"></div></div></div>
+      <div class="today" style="left:calc(16px + 330px + (100% - 32px - 330px) * 0.4375)"><span>현재 시점</span></div>
+      <div class="legend" style="justify-content:flex-end;padding-top:4px"><span style="color:var(--pri)"><i style="height:10px"></i>완료</span><span style="color:var(--act)"><i style="height:10px"></i>진행</span><span style="color:var(--pri-mid)"><i style="height:10px"></i>예정</span><span style="color:var(--navy)"><i style="height:10px"></i>핵심 마일스톤</span></div>
+    </div>
+    <div class="mcs">
+      <div class="mc"><span class="m">M4</span><p class="t18">M4 시점에 끝낼 일을 한 문장으로 적습니다.</p></div>
+      <div class="mc hi"><span class="m">M5</span><p class="t18"><b>핵심 마일스톤에 일어날 일을 한 문장으로 적습니다</b>.</p></div>
+      <div class="mc"><span class="m">M7</span><p class="t18">M7 시점에 끝낼 일을 한 문장으로 적습니다.</p></div>
+      <div class="mc"><span class="m">M8</span><p class="t18">M8 시점에 끝낼 일을 한 문장으로 적습니다.</p></div>
+    </div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>핵심 요약 문장을 한 줄로 씁니다.</p></div>
+</section>
+
+<!-- ============ SAMPLE 10 · DECISION CARDS ============ -->
+<section class="slide" id="s10" data-name="decisions">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>섹션 이름<span class="bar"></span><span class="ttl">슬라이드 소제목</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">10 <span>/ 11</span></span></div></div>
+  <h2 class="hl">다음 단계로 가기 위해 <em>오늘 확정해야 할 3가지 의사결정</em> 사항입니다.</h2>
+  <div class="bd" style="gap:14px">
+    <div class="row grow" style="flex-direction:row;gap:16px">
+      <div class="dc"><div class="hd"><span class="n">의사결정</span><span class="no">01</span></div>
+        <div class="tt">첫 번째 의사결정 제목</div>
+        <div class="ag"><span class="k"><svg class="ic s24"><use href="#i-q"/></svg>안건</span><p>첫 번째 안건을 질문 문장으로 적습니다. 이 안을 채택하는 것에 동의하십니까?</p></div></div>
+      <div class="dc z"><div class="hd"><span class="n">의사결정</span><span class="no">02</span></div>
+        <div class="tt">두 번째 의사결정 제목</div>
+        <div class="ag"><span class="k"><svg class="ic s24"><use href="#i-q"/></svg>안건</span><p>두 번째 안건을 질문 문장으로 적습니다. 이 기능을 함께 결합하는 것에 동의하십니까?</p></div></div>
+      <div class="dc n2"><div class="hd"><span class="n">의사결정</span><span class="no">03</span></div>
+        <div class="tt">세 번째 의사결정 제목</div>
+        <div class="ag"><span class="k"><svg class="ic s24"><use href="#i-q"/></svg>안건</span><p>세 번째 안건을 질문 문장으로 적습니다. 필요한 자료와 협조를 지원해 주시겠습니까?</p></div></div>
+    </div>
+    <div class="mean"><div class="icb"><svg class="ic"><use href="#i-flag"/></svg></div><div><div class="kick" style="margin-bottom:6px">의사결정의 의미</div><p class="t19">세 안건이 확정되면 바로 다음 작업에 들어갈 수 있다는 점을 한 문장으로 적습니다.</p></div></div>
+  </div>
+  <div class="tk"><span class="lb">핵심 요약</span><p>핵심 요약 문장을 한 줄로 씁니다.</p></div>
+</section>
+
+<!-- ============ SAMPLE 11 · Q&A / CLOSING ============ -->
+<section class="slide qa" id="s11" data-name="qna">
+  <div class="top"><div class="sec"><span class="pt">PART IV</span>섹션 이름<span class="bar"></span><span class="ttl">질의응답 (Q&amp;A)</span></div><div class="meta"><img src="assets/logo.svg" alt="LOGO"><span class="pn">11 <span>/ 11</span></span></div></div>
+  <div class="ctr">
+    <div style="display:flex;align-items:center;gap:36px;width:100%"><span class="deco2"></span><div class="qbig">Q&amp;A</div><span class="deco2 r"></span></div>
+    <div class="gl"></div>
+    <div class="msg2">경청해 주셔서 감사합니다. 마무리 인사를 한 문장으로 적습니다.</div>
+    <div class="qcard">
+      <div>
+        <div class="rw"><div class="icb"><svg class="ic"><use href="#i-team"/></svg></div><div><div class="k">문의처</div><p class="t19">기관명 / 부서명</p></div></div>
+        <div class="rw"><div class="icb"><svg class="ic"><use href="#i-mail"/></svg></div><div><div class="k">연락처</div><p class="t19">담당자 연락처</p></div></div>
+      </div>
+      <div><div class="k" style="font:700 15px/1 var(--G);color:var(--pri);margin:8px 0 12px">부속 자료 안내</div>
+        <ul><li><svg class="ic s24"><use href="#i-file"/></svg>부속 자료 1 이름</li><li><svg class="ic s24"><use href="#i-file"/></svg>부속 자료 2 이름</li><li><svg class="ic s24" style="color:var(--proof)"><use href="#i-file"/></svg>부속 자료 3 이름</li></ul></div>
+    </div>
+  </div>
+  <div class="endbar"></div>
+</section>
+
+</div>
+</body>
+</html>
